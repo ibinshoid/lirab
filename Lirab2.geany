@@ -1,0 +1,52 @@
+[editor]
+line_wrapping=false
+line_break_column=100
+auto_continue_multiline=true
+
+[file_prefs]
+final_new_line=true
+ensure_convert_new_lines=false
+strip_trailing_spaces=false
+replace_tabs=false
+
+[indentation]
+indent_width=4
+indent_type=1
+indent_hard_tab_width=8
+detect_indent=false
+detect_indent_width=false
+indent_mode=2
+
+[project]
+name=Lirab2
+base_path=/home/andreas/DEV/Lirab2/
+description=
+file_patterns=
+
+[long line marker]
+long_line_behaviour=1
+long_line_column=72
+
+[files]
+current_page=1
+FILE_NAME_0=732;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fandreas%2FDEV%2FLirab2%2Fsrc%2Fmain.vala;0;4
+FILE_NAME_1=996;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fandreas%2FDEV%2FLirab2%2Fsrc%2Flirab.vala;0;4
+FILE_NAME_2=10031;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fandreas%2FDEV%2FLirab2%2Fsrc%2Fhauptfenster.vala;0;4
+FILE_NAME_3=6166;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fandreas%2FDEV%2FLirab2%2Fsrc%2Flirabdb.vala;0;4
+FILE_NAME_4=4287;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fandreas%2FDEV%2FLirab2%2Fsrc%2Frationfenster.vala;0;4
+FILE_NAME_5=16646;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fandreas%2FDEV%2FLirab2%2Fsrc%2Fauswertung.vala;0;4
+FILE_NAME_6=9762;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fandreas%2FDEV%2FLirab2%2Fsrc%2Fmittelfenster.vala;0;4
+
+[VTE]
+last_dir=/home/andreas
+
+[build-menu]
+EX_00_LB=_Ausführen
+EX_00_CM=./lirab
+EX_00_WD=%p/build
+NF_00_LB=_Make
+NF_00_CM=cmake .. && make
+NF_00_WD=%p/build
+NF_02_LB=Make _Objekt-Datei
+NF_02_CM=make clean && cmake .. && make
+NF_02_WD=%p/build

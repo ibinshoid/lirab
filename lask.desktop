@@ -1,0 +1,13 @@
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=LASK
+Comment=Ackerschlagkartei
+GenericName=Ackerschlagkartei
+Exec=lask
+Icon=lask
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=Application;Office;Database;GTK;
+
