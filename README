@@ -1,0 +1,21 @@
+LASK ist eine Ackerschlagkartei für Linux
+Sie dient zum Dokumentieren von Arbeiten auf landwirtschaftlichen Feldern.
+
+Zum kompilieren und Installieren verwenden Sie im Projektverzeichnis folgende Befehle:
+
+    cd build
+    cmake ..
+    make
+    
+    make install
+
+Anregungen und Fehlermeldungen senden Sie bitte an andreas-strasser(at)web.de
+oder verwenden Sie meine Projektseite unter www.launchpad.net/lask
+
+Binärpackete für verschiedene Distributionen und Architekturen stehen unter
+http://software.opensuse.org/download?package=lask&project=home:ihoid
+oder
+http://software.opensuse.org/package/lask
+zum download bereit.
+
+
