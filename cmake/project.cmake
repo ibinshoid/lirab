@@ -18,7 +18,6 @@ set(srcfiles
   "src/mittelfenster.vala"
   "src/rationfenster.vala"
   "src/auswertung.vala"
-  "src/rationtab.vala"
 )
 set(vapifiles
 )
