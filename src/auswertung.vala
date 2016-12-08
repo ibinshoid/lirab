@@ -25,9 +25,11 @@ public class causwertungFenster : GLib.Object{
     private int deckblatt = 1;
     private mittel[] blaetter = {};
     private mittel blatt = mittel();
+	private ration rat;
     
-    public causwertungFenster() {
+    public causwertungFenster(ration r) {
     //Konstructor
+		this.rat = r;
         builder.set_translation_domain ("lirab");
         builder.add_from_file ("lirab.ui");
         builder.connect_signals (this);
@@ -65,7 +67,7 @@ public class causwertungFenster : GLib.Object{
         printop.set_n_pages(seiten + 1 - auswertungFenster.deckblatt);
         printop.set_print_settings(settings);
         printop.draw_page.connect (print_pages);
-       res = printop.run (PrintOperationAction.PRINT_DIALOG, auswertungFenster.tmpfenster);
+        res = printop.run (PrintOperationAction.PRINT_DIALOG, auswertungFenster.tmpfenster);
 //        res = printop.run (PrintOperationAction.PREVIEW, auswertungFenster.tmpfenster);
     }       
     
@@ -99,7 +101,6 @@ public class causwertungFenster : GLib.Object{
 	
 	public void aendern(){
 	//Auswertung zusammenbauen
-		ration rat = aktRation;
 		
 		seiten = 0;
 		blaetter.length = 0;
@@ -204,18 +205,25 @@ public class causwertungFenster : GLib.Object{
 			cr.set_font_size(13);
 			layout1.set_font_description(FontDescription.from_string("sans 25"));
             layout1.set_markup("<b><u>Ration:</u></b>", -1);
-            cr.move_to(0, 30);
+            cr.move_to(0, 80);
             cairo_layout_path (cr, layout1);
-            layout1.set_markup("<b><u>" + aktRation.name + "</u></b>", -1);
-            cr.move_to(0, 90);
+            layout1.set_markup("<b><u>" + rat.name + "</u></b>", -1);
+            cr.move_to(0, 150);
             cairo_layout_path (cr, layout1);
             layout1.set_font_description(FontDescription.from_string("sans 10"));
-            layout1.set_markup("Erstellt mit Lirab 0.1", -1);
+            layout1.set_markup("Erstellt mit Lirab " + version, -1);
             cr.move_to(0, heigh - 20);
+            cairo_layout_path (cr, layout1);
+            cr.fill();
+            layout1.set_alignment(Pango.Alignment.RIGHT);
+            layout1.set_markup("Druckdatum: " + new DateTime.now_local().format("%d.%m.%Y") + "   ", -1);
+            cr.move_to(0, 20);
             cairo_layout_path (cr, layout1);
             cr.fill();
        }else if(blaetter[page_nr -1].name != null) {
 		//Futtermittel drucken
+			zeilen = 5;
+			zeilenhoehe = 30;
 			//Überschrift
 			cr.set_source_rgb (0, 0, 0);
 			layout1.set_font_description(FontDescription.from_string("sans 25"));
@@ -238,63 +246,309 @@ public class causwertungFenster : GLib.Object{
             cr.fill();
             
             //Inhaltsstoffe
+            layout2.set_width(300 * dpi);
+            layout2.set_alignment(Pango.Alignment.RIGHT);
+            layout2.set_markup("Preis:", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].preis, 0) + " €/dt", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 2;
+            
+            layout2.set_width(300 * dpi);
 			layout2.set_font_description(FontDescription.from_string("sans 12"));
             layout2.set_markup("Trockenmasse (TM):", -1);
-            cr.move_to(100, 200);
+            cr.move_to(200, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
             layout2.set_markup(doubleparse(blaetter[page_nr -1].TM, 0) + " g/kg", -1);
-            cr.move_to(400, 200);
+            cr.move_to(500, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();
+            zeilen += 1;
             
+            layout2.set_width(300 * dpi);
             layout2.set_markup("Rohfaser (RF):", -1);
-            cr.move_to(100, 250);
+            cr.move_to(200, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
             layout2.set_markup(doubleparse(blaetter[page_nr -1].RF, 0) + " g/kg TM", -1);
-            cr.move_to(400, 250);
+            cr.move_to(500, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();
+            zeilen += 1;
             
-            layout2.set_markup("Rohprotein (XP):", -1);
-            cr.move_to(100, 300);
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Strukturwert (SW):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].SW, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 2;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Eiweiß (XP):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
             layout2.set_markup(doubleparse(blaetter[page_nr -1].XP, 0) + " g/kg TM", -1);
-            cr.move_to(400, 300);
+            cr.move_to(500, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();
+            zeilen += 1;
             
-            layout2.set_markup("nutzbares Rohprotein (nXP):", -1);
-            cr.move_to(100, 350);
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Reineiweiß (rXP):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].rXP, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("nutzbares Eiweiß (nXP):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
             layout2.set_markup(doubleparse(blaetter[page_nr -1].nXP, 0) + " g/kg TM", -1);
-            cr.move_to(400, 350);
+            cr.move_to(500, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();
+            zeilen += 1;
             
+            layout2.set_width(300 * dpi);
             layout2.set_markup("Stickstoffbilanz (RNB):", -1);
-            cr.move_to(100, 400);
+            cr.move_to(200, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].RNB, 1) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("stabiles Eiweiß (UDP):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
             layout2.set_markup(doubleparse(blaetter[page_nr -1].RNB) + " g/kg TM", -1);
-            cr.move_to(400, 400);
+            cr.move_to(500, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();
+            zeilen += 2;
             
+            layout2.set_width(300 * dpi);
             layout2.set_markup("Netto-Energie-Laktation (NEL):", -1);
-            cr.move_to(100, 450);
+            cr.move_to(200, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
             layout2.set_markup(doubleparse(blaetter[page_nr -1].NEL) + " MJ/kg TM", -1);
-            cr.move_to(400, 450);
+            cr.move_to(500, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();
+            zeilen += 1;
             
+            layout2.set_width(300 * dpi);
             layout2.set_markup("Umsetzbare Energie (ME):", -1);
-            cr.move_to(100, 500);
+            cr.move_to(200, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
             layout2.set_markup(doubleparse(blaetter[page_nr -1].ME) + " MJ/kg TM", -1);
-            cr.move_to(400, 500);
+            cr.move_to(500, zeilen * zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();
+            zeilen += 2;
+ 
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Stärke (XS):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].XS, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("stabile Stärke (bXS):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].bXS, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Zucker (XZ):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].XZ, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Rohfett (XL):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].XL, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Cellulase (CL):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].CL, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Rohasche (XA):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].XA, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Gerüstsubstanz (NDF):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].NDF, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("unverdauliche NDF (ADF):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].ADF, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Organische NDF (NDFo):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].NDFo, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Zucker+Stärke (NFC):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].NFC, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Verdaulichkeit (ELOS):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].ELOS, 0) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 2;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Calzium (Ca):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].Ca, 1) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Phosphor (P):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].P, 1) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Magnesium (Mg):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].Mg, 1) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Natrium (Na):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].Na, 1) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
+            layout2.set_width(300 * dpi);
+            layout2.set_markup("Kalium (K):", -1);
+            cr.move_to(200, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            layout2.set_width(150 * dpi);
+            layout2.set_markup(doubleparse(blaetter[page_nr -1].K, 1) + " g/kg TM", -1);
+            cr.move_to(500, zeilen * zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            cr.fill();
+            zeilen += 1;
+            
 	   }else{
+		//Auswertung drucken
+			zeilen = 0;
+			zeilenhoehe = 20;
 			//Überschrift
 			cr.set_source_rgb (0, 0, 0);
 			layout1.set_font_description(FontDescription.from_string("sans 25"));
@@ -335,7 +589,48 @@ public class causwertungFenster : GLib.Object{
             cr.stroke();
             zeilen = 12;
             //Einzelne Futtermittel
-            foreach(mittel m in aktRation.grundKomponenten){
+            //Grundfutter
+            layout2.set_markup("<b><u>Grundfutter:</u></b>", -1);
+            cr.move_to(50, zeilen*zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            zeilen +=1;
+            cr.fill();
+            foreach(mittel m in rat.grundKomponenten){
+	            kgts =m.menge * m.TM / 1000;
+	            layout2.set_markup(m.name, -1);
+	            cr.move_to(50, zeilen*zeilenhoehe);
+	            cairo_layout_path (cr, layout2);
+	             sMittel.menge += kgts;
+	            layout2.set_markup(doubleparse(m.menge) + " / " + doubleparse(kgts), -1);
+	            cr.move_to(250, zeilen*zeilenhoehe);
+	            cairo_layout_path (cr, layout2);
+	             sMittel.XP += m.XP * kgts;
+	            layout2.set_markup(doubleparse(m.XP * kgts), -1);
+	            cr.move_to(380, zeilen*zeilenhoehe);
+	            cairo_layout_path (cr, layout2);
+	             sMittel.nXP += m.nXP * kgts;
+	            layout2.set_markup(doubleparse(m.nXP * kgts), -1);
+	            cr.move_to(510, zeilen*zeilenhoehe);
+	            cairo_layout_path (cr, layout2);
+	             sMittel.RNB += m.RNB * kgts;
+	            layout2.set_markup(doubleparse(m.RNB * kgts), -1);
+	            cr.move_to(640, zeilen*zeilenhoehe);
+	            cairo_layout_path (cr, layout2);
+	             sMittel.NEL += m.NEL * kgts;
+	            layout2.set_markup(doubleparse(m.NEL * kgts), -1);
+	            cr.move_to(770, zeilen*zeilenhoehe);
+	            cairo_layout_path (cr, layout2);
+	            cr.fill();
+				zeilen += 1;
+			}
+            //Kraftfutter
+			zeilen += 1;
+            layout2.set_markup("<b><u>Kraftfutter:</u></b>", -1);
+            cr.move_to(50, zeilen*zeilenhoehe);
+            cairo_layout_path (cr, layout2);
+            zeilen +=1;
+            cr.fill();
+            foreach(mittel m in rat.kraftKomponenten){
 	            kgts =m.menge * m.TM / 1000;
 	            layout2.set_markup(m.name, -1);
 	            cr.move_to(50, zeilen*zeilenhoehe);
@@ -390,8 +685,8 @@ public class causwertungFenster : GLib.Object{
 			cr.stroke();
             //Bedarf
             zeilen += 2;
-            foreach(mittel m in aktRation.tierBedarf){
-	            kgts =m.menge * m.TM / 1000 * aktRation.tiere;
+            foreach(mittel m in rat.tierBedarf){
+	            kgts =m.menge * m.TM / 1000;
 	            layout2.set_markup(m.name, -1);
 	            cr.move_to(50, zeilen*zeilenhoehe);
 	            cairo_layout_path (cr, layout2);
@@ -423,16 +718,16 @@ public class causwertungFenster : GLib.Object{
 //            layout2.set_markup(doubleparse(sMittel.menge), -1);
 //            cr.move_to(250, zeilen*zeilenhoehe);
 //            cairo_layout_path (cr, layout2);
-            layout2.set_markup(doubleparse((sMittel.XP - aktRation.tierBedarf[0].XP) / aktRation.tierBedarf[1].XP), -1);
+            layout2.set_markup(doubleparse((sMittel.XP - rat.tierBedarf[0].XP) / rat.tierBedarf[1].XP), -1);
             cr.move_to(380, zeilen*zeilenhoehe);
             cairo_layout_path (cr, layout2);
-            layout2.set_markup(doubleparse((sMittel.nXP - aktRation.tierBedarf[0].nXP) / aktRation.tierBedarf[1].nXP), -1);
+            layout2.set_markup(doubleparse((sMittel.nXP - rat.tierBedarf[0].nXP) / rat.tierBedarf[1].nXP), -1);
             cr.move_to(510, zeilen*zeilenhoehe);
             cairo_layout_path (cr, layout2);
 //            layout2.set_markup(doubleparse(sMittel.RNB), -1);
 //            cr.move_to(640, zeilen*zeilenhoehe);
 //            cairo_layout_path (cr, layout2);
-            layout2.set_markup(doubleparse((sMittel.NEL - aktRation.tierBedarf[0].NEL) / aktRation.tierBedarf[1].NEL), -1);
+            layout2.set_markup(doubleparse((sMittel.NEL - rat.tierBedarf[0].NEL) / rat.tierBedarf[1].NEL), -1);
             cr.move_to(770, zeilen*zeilenhoehe);
             cairo_layout_path (cr, layout2);
             cr.fill();

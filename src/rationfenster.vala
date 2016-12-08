@@ -12,7 +12,7 @@ public class crationFenster {
 	private Button button10;
 	private Entry entry1;
 	private ComboBoxText comboboxtext1;
-	private ListStore liststore3;
+	private Gtk.ListStore liststore3;
 	private TreeView treeview2;
 	private Grid grid14;
  	private	bedarf[] b = {};
@@ -32,14 +32,14 @@ public class crationFenster {
 		treeview2 = builder.get_object ("treeview2") as TreeView;
 		comboboxtext1 = builder.get_object ("comboboxtext1") as ComboBoxText;
 		grid14 = builder.get_object ("grid14") as Grid;
-		liststore3 = builder.get_object ("liststore3") as ListStore;
+		liststore3 = builder.get_object ("liststore3") as Gtk.ListStore;
 		this.window4.destroy.connect (Gtk.main_quit);
 		
 		//Ereignisse verbinden
 		button5.clicked.connect(rationAnlegen);
 		button7.clicked.connect(rationLaden);
 		button8.clicked.connect(rationBauen);
-		button9.clicked.connect(rationBearbeiten);
+		button9.clicked.connect(()=>{rationBearbeiten(lirabDb.rationLesen(getTreeViewName(rationFenster.treeview2)));});
 		button10.clicked.connect(rationLoeschen);
 	}
 
@@ -56,7 +56,6 @@ public class crationFenster {
 	//Neue leere Ration in Datenbank anlegen
         ration rat = ration();
         mittel[] m = {mittel()};
-        double[] d = {0};
 
 		rat.id = -1;
 		rat.name = rationFenster.entry1.get_text();
@@ -67,22 +66,39 @@ public class crationFenster {
 		m.resize(0);
 		m += new bedarf(rat.name, 0).tierBedarf;
 		m[0].art = rat.art;
-		m[0].menge = aktRation.tiere;
+		m[0].menge = 1;
 		foreach (bedarf be in rationFenster.b){
 			be.tierBedarf.art = "Bedarf";
 			m += be.tierBedarf;
 		}
 		rat.tierBedarf = m;
 		lirabDb.rationHinzufuegen(rat);
-		aktRation = rat;
 		rationFenster.rationenLesen();
 		rationFenster.window2.hide();
+	}
+	
+	public void rationAendern(ration r){
+	//Geänderte Ration speichern
+        ration rat = r;
+        mittel[] m = {mittel()};
+        
+		m.resize(0);
+		foreach (bedarf be in rationFenster.b){
+			be.tierBedarf.art = "Bedarf";
+			m += be.tierBedarf;
+		}
+		rat.tierBedarf = m;
+		lirabDb.rationSpeichern(rat);
 	}
 
 	public void rationBauen(){
 	//Fenster zum Ration anlegen bauen und anzeigen
+        this.button5.set_label("Anlegen");
+		this.button5.clicked.connect(rationAnlegen);
         rationFenster.entry1.set_editable(true);
+        rationFenster.entry1.set_has_frame(true);
         rationFenster.entry1.set_text("");
+        this.comboboxtext1.set_button_sensitivity(SensitivityType.AUTO);
         rationFenster.comboboxtext1.set_active(0);
 		foreach (bedarf be in rationFenster.b){
 			be.destroy();
@@ -90,7 +106,7 @@ public class crationFenster {
 		rationFenster.b.length = 0;
 		rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
 		rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
-		rationFenster.grid14.add(new HSeparator());
+		rationFenster.grid14.add(new Separator(Orientation.HORIZONTAL));
 		rationFenster.b += new bedarf("Bedarf je Liter Milch", rationFenster.b.length);
 		rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
 		rationFenster.grid14.show_all();
@@ -123,7 +139,7 @@ public class crationFenster {
 		rationFenster.window4.hide();
 	}
 
-	public void rationBearbeiten(){
+	public void rationBearbeiten(ration r){
 	//Fenster zum Ration bearbeiten bauen und anzeigen
 		int i = 0;
 		Entry entry;
@@ -133,9 +149,11 @@ public class crationFenster {
 		rationFenster.rationBauen();
         //Werte setzen
         name = getTreeViewName(rationFenster.treeview2);
-        rat = lirabDb.rationLesen(name);
+        rat = r;
         rationFenster.entry1.set_editable(false);
+        rationFenster.entry1.set_has_frame(false);
         rationFenster.entry1.set_text(rat.name);
+        this.comboboxtext1.set_button_sensitivity(SensitivityType.OFF);
         entry = rationFenster.comboboxtext1.get_child() as Entry;
         entry.set_text(rat.art);
         foreach (mittel be in rat.tierBedarf){
@@ -144,6 +162,8 @@ public class crationFenster {
 	        rationFenster.b[i].spinbutton3.set_value(be.NEL);
 	        i += 1;
 		}
+		this.button5.set_label("Ändern");
+		this.button5.clicked.connect(()=>{this.rationAendern(rat);});
 	}
 
 }

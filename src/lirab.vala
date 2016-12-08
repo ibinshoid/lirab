@@ -6,13 +6,33 @@ namespace lirab{
 		public string name;
 		public string art;
 		public double menge;
-		public double TM;
-		public double RF;
-		public double XP;
-		public double nXP;
-		public double RNB;
-		public double NEL;
-		public double ME;
+		public double preis;
+		public double TM;	//Trockenmasse
+		public double RF;	//Rohfaser
+		public double SW;	//Strukturwert
+		public double XP;	//Eiweiß
+		public double rXP;	//Reineiweiß
+		public double nXP;	//nutzbares Eiweiß
+		public double RNB;	//N-Bilanz
+		public double UDP;	//Pansenstabiles Eiweiß
+		public double NEL;	//Netto Energie Laktation
+		public double ME;	//Metaboliche Energie
+		public double XS;	//Stärke
+		public double bXS;	//pansenstabile Stärke
+		public double XZ;	//Zucker
+		public double XL;	//Rohfett
+		public double CL;	//Cellulase
+		public double XA;	//Rohasche
+		public double NDF;	//Gerüstsubstanzen
+		public double ADF;	//unverdauliche NDF
+		public double NDFo;	//organische NDF
+		public double NFC;	//Zucker+Stärke
+		public double ELOS;	//Verdaulichkeit
+		public double Ca;	//Calzium
+		public double P;	//Phosphor
+		public double Mg;	//Magnesium
+		public double Na;	//Natrium
+		public double K;	//Kalium
 	}
 	
 	public struct ration{
@@ -97,7 +117,7 @@ namespace lirab{
 		public mittel fmMittel;
 		public int wo;
 		public double menge = 0;
-		
+		public int tiere = 1;
 		public komponente(mittel mi, int pos){
 		//Constructor
 			wo = pos;
@@ -119,7 +139,7 @@ namespace lirab{
 		public void update(){
 			double kgts = 0;
 			this.menge = this.eingabe.spinbutton.get_value();
-			this.fmMittel.menge = this.eingabe.spinbutton.get_value() / aktRation.tiere;
+			this.fmMittel.menge = this.eingabe.spinbutton.get_value() / this.tiere;
 			kgts = fmMittel.TM * fmMittel.menge / 1000;
 			this.auswertung.label1.set_text(fmMittel.name);
 			this.auswertung.label2.set_text(doubleparse(fmMittel.TM * fmMittel.menge / 1000));
@@ -168,7 +188,7 @@ namespace lirab{
 			
 		}
 		public void update(){
-			this.tierBedarf.XP = spinbutton1.get_value();
+			this.tierBedarf.XP  = spinbutton1.get_value();
 			this.tierBedarf.nXP = spinbutton2.get_value();
 			this.tierBedarf.NEL = spinbutton3.get_value();
 		}

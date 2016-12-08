@@ -22,6 +22,16 @@ public class cmittelFenster {
 	private SpinButton spinbutton5;
 	private SpinButton spinbutton6;
 	private SpinButton spinbutton7;
+	private SpinButton spinbutton8;
+	private SpinButton spinbutton9;
+	private SpinButton spinbutton10;
+	private SpinButton spinbutton11;
+	private SpinButton spinbutton12;
+	private SpinButton spinbutton13;
+	private SpinButton spinbutton14;
+	private SpinButton spinbutton15;
+	private SpinButton spinbutton16;
+	private SpinButton spinbutton17;
 	private SpinButton spinbutton18;
 	private SpinButton spinbutton19;
 	private SpinButton spinbutton20;
@@ -32,10 +42,13 @@ public class cmittelFenster {
 	private SpinButton spinbutton25;
 	private SpinButton spinbutton26;
 	private SpinButton spinbutton27;
+	private SpinButton spinbutton28;
 	private Entry entry1;
 	private Entry entry2;
 	private ComboBoxText comboboxtext2;
-	private Grid grid7;
+	private Grid grid21;
+	private Grid grid22;
+	private Grid grid23;
 	public signal void anders();
 	
 	public cmittelFenster() {	
@@ -54,13 +67,23 @@ public class cmittelFenster {
 		button4 = builder.get_object("button4") as Button;
 		button12 = builder.get_object("button12") as Button;
 		button13 = builder.get_object("button13") as Button;
-		spinbutton1 = builder.get_object("spinbutton1") as SpinButton;
-		spinbutton2 = builder.get_object("spinbutton2") as SpinButton;
-		spinbutton3 = builder.get_object("spinbutton3") as SpinButton;
-		spinbutton4 = builder.get_object("spinbutton4") as SpinButton;
-		spinbutton5 = builder.get_object("spinbutton5") as SpinButton;
-		spinbutton6 = builder.get_object("spinbutton6") as SpinButton;
-		spinbutton7 = builder.get_object("spinbutton7") as SpinButton;
+		spinbutton1  = builder.get_object("spinbutton1")  as SpinButton;
+		spinbutton2  = builder.get_object("spinbutton2")  as SpinButton;
+		spinbutton3  = builder.get_object("spinbutton3")  as SpinButton;
+		spinbutton4  = builder.get_object("spinbutton4")  as SpinButton;
+		spinbutton5  = builder.get_object("spinbutton5")  as SpinButton;
+		spinbutton6  = builder.get_object("spinbutton6")  as SpinButton;
+		spinbutton7  = builder.get_object("spinbutton7")  as SpinButton;
+		spinbutton8  = builder.get_object("spinbutton8")  as SpinButton;
+		spinbutton9  = builder.get_object("spinbutton9")  as SpinButton;
+		spinbutton10 = builder.get_object("spinbutton10") as SpinButton;
+		spinbutton11 = builder.get_object("spinbutton11") as SpinButton;
+		spinbutton12 = builder.get_object("spinbutton12") as SpinButton;
+		spinbutton13 = builder.get_object("spinbutton13") as SpinButton;
+		spinbutton14 = builder.get_object("spinbutton14") as SpinButton;
+		spinbutton15 = builder.get_object("spinbutton15") as SpinButton;
+		spinbutton16 = builder.get_object("spinbutton16") as SpinButton;
+		spinbutton17 = builder.get_object("spinbutton17") as SpinButton;
 		spinbutton18 = builder.get_object("spinbutton18") as SpinButton;
 		spinbutton19 = builder.get_object("spinbutton19") as SpinButton;
 		spinbutton20 = builder.get_object("spinbutton20") as SpinButton;
@@ -71,15 +94,18 @@ public class cmittelFenster {
 		spinbutton25 = builder.get_object("spinbutton25") as SpinButton;
 		spinbutton26 = builder.get_object("spinbutton26") as SpinButton;
 		spinbutton27 = builder.get_object("spinbutton27") as SpinButton;
+		spinbutton28 = builder.get_object("spinbutton28") as SpinButton;
 		entry1 = builder.get_object("entry1") as Entry;
 		entry2 = builder.get_object("entry2") as Entry;
 		comboboxtext2 = builder.get_object("comboboxtext2") as ComboBoxText;
-		grid7 = builder.get_object("grid7") as Grid;
+		grid21 = builder.get_object("grid21") as Grid;
+		grid22 = builder.get_object("grid22") as Grid;
+		grid23 = builder.get_object("grid23") as Grid;
 		this.window2.destroy.connect(Gtk.main_quit);
 		this.button2.clicked.connect(mittelBearbeiten); 
 		this.button3.clicked.connect(mittelEntfernen); 
 		this.button12.clicked.connect(mittelHinzufuegen);
-		this.button13.clicked.connect(mittelSaeubern);
+		this.button13.clicked.connect(()=>{mittelSaeubern(grid21);mittelSaeubern(grid22);mittelSaeubern(grid23);});
 		this.treeview1.cursor_changed.connect(mittelUpdate); 
 	}
 	
@@ -175,47 +201,92 @@ public class cmittelFenster {
 		mittel fMittel = mittel();
 		
 		//Wenn Ändern  dann Mittel löschen und neu Schreiben
+		fMittel.id   = -1;
 		if(this.button12.get_label() == "Ändern"){
 			lirabDb.mittelEntfernen(aktMittel.id);
+			fMittel.id   = aktMittel.id;
+			
 		}
-		fMittel.id = -1;
 		fMittel.name = this.entry2.get_text();
-		fMittel.art = comboboxtext2.get_active_text();
-		fMittel.TM = this.spinbutton1.get_value_as_int();
-		fMittel.RF = this.spinbutton2.get_value_as_int();
-		fMittel.XP = this.spinbutton3.get_value_as_int();
-		fMittel.nXP = this.spinbutton4.get_value_as_int();
-		fMittel.ME = this.spinbutton5.get_value();
-		fMittel.NEL = this.spinbutton6.get_value();
-		fMittel.RNB = this.spinbutton7.get_value_as_int();
+		fMittel.art  = this.comboboxtext2.get_active_text();
+		fMittel.TM   = this.spinbutton2.get_value();
+		fMittel.preis= this.spinbutton3.get_value();
+		fMittel.RF   = this.spinbutton4.get_value();
+		fMittel.SW   = this.spinbutton5.get_value();
+		fMittel.XP   = this.spinbutton6.get_value();
+		fMittel.rXP  = this.spinbutton7.get_value();
+		fMittel.nXP  = this.spinbutton8.get_value();
+		fMittel.RNB  = this.spinbutton9.get_value();
+		fMittel.UDP  = this.spinbutton10.get_value();
+		fMittel.NEL  = this.spinbutton11.get_value();
+		fMittel.ME   = this.spinbutton12.get_value();
+		fMittel.XS   = this.spinbutton13.get_value();
+		fMittel.bXS  = this.spinbutton14.get_value();
+		fMittel.XZ   = this.spinbutton15.get_value();
+		fMittel.XL   = this.spinbutton16.get_value();
+		fMittel.CL   = this.spinbutton17.get_value();
+		fMittel.XA   = this.spinbutton18.get_value();
+		fMittel.NDF  = this.spinbutton19.get_value();
+		fMittel.ADF  = this.spinbutton20.get_value();
+		fMittel.NDFo = this.spinbutton21.get_value();
+		fMittel.NFC  = this.spinbutton22.get_value();
+		fMittel.ELOS = this.spinbutton23.get_value();
+		fMittel.Ca   = this.spinbutton24.get_value();
+		fMittel.P    = this.spinbutton25.get_value();
+		fMittel.Mg   = this.spinbutton26.get_value();
+		fMittel.Na   = this.spinbutton27.get_value();
+		fMittel.K    = this.spinbutton28.get_value();
 		
 		lirabDb.mittelHinzufuegen(fMittel);
 		this.mittelLesen();
 		anders();
-		this.mittelSaeubern();
+		this.mittelSaeubern(grid21);
+		this.mittelSaeubern(grid22);
+		this.mittelSaeubern(grid23);
 	}
 	
 	public void mittelBearbeiten(){
 	//Mittel Bearbeiten Fenster füllen und zeigen
 		Entry cbentry = this.comboboxtext2.get_child() as Entry;
 		
+		
 		cbentry.set_text(aktMittel.art);
 		this.entry2.set_text(aktMittel.name);
-		this.spinbutton1.set_value(aktMittel.TM);
-		this.spinbutton2.set_value(aktMittel.RF);
-		this.spinbutton3.set_value(aktMittel.XP);
-		this.spinbutton4.set_value(aktMittel.nXP);
-		this.spinbutton5.set_value(aktMittel.ME);
-		this.spinbutton6.set_value(aktMittel.NEL);
-		this.spinbutton7.set_value(aktMittel.RNB);
+		this.spinbutton2.set_value(aktMittel.TM);
+		this.spinbutton3.set_value(aktMittel.preis);
+		this.spinbutton4.set_value(aktMittel.RF);
+		this.spinbutton5.set_value(aktMittel.SW);
+		this.spinbutton6.set_value(aktMittel.XP);
+		this.spinbutton7.set_value(aktMittel.rXP);
+		this.spinbutton8.set_value(aktMittel.nXP);
+		this.spinbutton9.set_value(aktMittel.RNB);
+		this.spinbutton10.set_value(aktMittel.UDP);
+		this.spinbutton11.set_value(aktMittel.NEL);
+		this.spinbutton12.set_value(aktMittel.ME);
+		this.spinbutton13.set_value(aktMittel.XS);
+		this.spinbutton14.set_value(aktMittel.bXS);
+		this.spinbutton15.set_value(aktMittel.XZ);
+		this.spinbutton16.set_value(aktMittel.XL);
+		this.spinbutton17.set_value(aktMittel.CL);
+		this.spinbutton18.set_value(aktMittel.XA);
+		this.spinbutton19.set_value(aktMittel.NDF);
+		this.spinbutton20.set_value(aktMittel.ADF);
+		this.spinbutton21.set_value(aktMittel.NDFo);
+		this.spinbutton22.set_value(aktMittel.NFC);
+		this.spinbutton23.set_value(aktMittel.ELOS);
+		this.spinbutton24.set_value(aktMittel.Ca);
+		this.spinbutton25.set_value(aktMittel.P);
+		this.spinbutton26.set_value(aktMittel.Mg);
+		this.spinbutton27.set_value(aktMittel.Na);
+		this.spinbutton28.set_value(aktMittel.K);
 		this.button12.set_label("Ändern");
 		this.window5.show();
 	}
 	
-	public void mittelSaeubern(){
+	public void mittelSaeubern(Grid g){
 	//Mittel hinzufügen Fenster sauber machen
 		
-		foreach(Widget w in grid7.get_children()){
+		foreach(Widget w in g.get_children()){
 			if(w.get_type().name() == "GtkSpinButton"){
 				SpinButton s = w as SpinButton;
 				s.set_value(0);

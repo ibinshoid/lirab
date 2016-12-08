@@ -1,3 +1,11 @@
+0.2.0
+- compiliert jetzt auch mit glib >= 2.44
+- Es können mehrere Rationen als Tab geladen werden
+- Futtermittel haben mehr Inhaltsstoffe
+- Anzahl der Tiere wird abgespeichert
+- Drucken geht auch ohne Deckblatt
+- Viele kleine Verbesserungen
+
 0.1.0
 - Erste veröffentlichte Version
 - Grundfunktionen gehen

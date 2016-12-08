@@ -26,16 +26,45 @@ public class clirabDb{
 		if ( rc == 1){
 			stderr.printf("Datenbank konnte nicht angelegt werden: %s\n", db.errmsg ());
 		}
+		//Tabelle für Einstellungen anlegen
+		rc = db.prepare_v2("CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY AUTOINCREMENT,
+																name TEXT
+																wert TEXT)" , -1, out stmt);
+		rc = stmt.step();
+		if ( rc == 1){
+			stderr.printf("Datentabellen konnten nicht angelegt werden: %s\n", db.errmsg ());
+		}
+		//Tabelle für Futtermittel anlegen										
 		rc = db.prepare_v2("CREATE TABLE IF NOT EXISTS futtermittel (id INTEGER PRIMARY KEY AUTOINCREMENT, 
 																name TEXT, 
 																art TEXT, 
+																preis DOUBLE, 
 																tm DOUBLE, 
 																rf DOUBLE, 
+																sw DOUBLE, 
 																xp DOUBLE, 
+																rxp DOUBLE, 
 																nxp DOUBLE, 
 																rnb DOUBLE, 
 																nel DOUBLE,
-																me DOUBLE)" , -1, out stmt);
+																me DOUBLE,
+																udp DOUBLE,
+																xs DOUBLE,
+																bxs DOUBLE,
+																xz DOUBLE,
+																xl DOUBLE,
+																cl DOUBLE,
+																xa DOUBLE,
+																ndf DOUBLE,
+																adf DOUBLE,
+																ndfo DOUBLE,
+																nfc DOUBLE,
+																elos DOUBLE,
+																ca DOUBLE,
+																p DOUBLE,
+																mg DOUBLE,
+																na DOUBLE,
+																k DOUBLE)" , -1, out stmt);
 		rc = stmt.step();
 		
 		if ( rc == 1){
@@ -57,13 +86,33 @@ public class clirabDb{
 							+ eid + ",'"
 							+ name.name + "','"
 							+ name.art + "','"
+							+ name.preis.to_string() + "','"
 							+ name.TM.to_string() + "','"
 							+ name.RF.to_string() + "','"
+							+ name.SW.to_string() + "','"
 							+ name.XP.to_string() + "','"
+							+ name.rXP.to_string() + "','"
 							+ name.nXP.to_string() + "','"
 							+ name.RNB.to_string() + "','"
 							+ name.NEL.to_string() + "','"
-							+ name.ME.to_string() + "' )", -1, out stmt, null);
+							+ name.ME.to_string() + "','"
+							+ name.UDP.to_string() + "','"
+							+ name.XS.to_string() + "','"
+							+ name.bXS.to_string() + "','"
+							+ name.XZ.to_string() + "','"
+							+ name.XL.to_string() + "','"
+							+ name.CL.to_string() + "','"
+							+ name.XA.to_string() + "','"
+							+ name.NDF.to_string() + "','"
+							+ name.ADF.to_string() + "','"
+							+ name.NDFo.to_string() + "','"
+							+ name.NFC.to_string() + "','"
+							+ name.ELOS.to_string() + "','"
+							+ name.Ca.to_string() + "','"
+							+ name.P.to_string() + "','"
+							+ name.Mg.to_string() + "','"
+							+ name.Na.to_string() + "','"
+							+ name.K.to_string() + "' )", -1, out stmt, null);
 		rc = stmt.step();
 		if ( rc != 0 ) {
 			stderr.printf ("SQL error mittelHinzufuegen: %d, %s\n", rc, db.errmsg ());
@@ -90,13 +139,33 @@ public class clirabDb{
 					rueckMittel.id = stmt.column_int(0);
 					rueckMittel.name = stmt.column_text(1);
 					rueckMittel.art = stmt.column_text(2);
-					rueckMittel.TM = stmt.column_double(3);
-					rueckMittel.RF=stmt.column_double(4);
-					rueckMittel.XP=stmt.column_double(5);
-					rueckMittel.nXP=stmt.column_double(6);
-					rueckMittel.RNB=stmt.column_double(7);
-					rueckMittel.NEL=stmt.column_double(8);
-					rueckMittel.ME=stmt.column_double(9);
+					rueckMittel.preis = stmt.column_double(3);
+					rueckMittel.TM  = stmt.column_double(4);
+					rueckMittel.RF  = stmt.column_double(5);
+					rueckMittel.SW  = stmt.column_double(6);
+					rueckMittel.XP  = stmt.column_double(7);
+					rueckMittel.rXP = stmt.column_double(8);
+					rueckMittel.nXP = stmt.column_double(9);
+					rueckMittel.RNB = stmt.column_double(10);
+					rueckMittel.NEL = stmt.column_double(11);
+					rueckMittel.ME  = stmt.column_double(12);
+					rueckMittel.UDP = stmt.column_double(13);
+					rueckMittel.XS  = stmt.column_double(14);
+					rueckMittel.bXS = stmt.column_double(15);
+					rueckMittel.XZ  = stmt.column_double(16);
+					rueckMittel.XL  = stmt.column_double(17);
+					rueckMittel.CL  = stmt.column_double(18);
+					rueckMittel.XA  = stmt.column_double(19);
+					rueckMittel.NDF = stmt.column_double(20);
+					rueckMittel.ADF = stmt.column_double(21);
+					rueckMittel.NDFo= stmt.column_double(22);
+					rueckMittel.NFC = stmt.column_double(23);
+					rueckMittel.ELOS= stmt.column_double(24);
+					rueckMittel.Ca  = stmt.column_double(25);
+					rueckMittel.P   = stmt.column_double(26);
+					rueckMittel.Mg  = stmt.column_double(27);
+					rueckMittel.Na  = stmt.column_double(28);
+					rueckMittel.K   = stmt.column_double(29);
 					Mittel += rueckMittel;
 					break;
 				default:
@@ -135,13 +204,33 @@ public class clirabDb{
 																art TEXT, 
 																wo TEXT, 
 																menge DOUBLE,
+																preis DOUBLE,
 																tm DOUBLE, 
-																xf DOUBLE, 
+																rf DOUBLE, 
+																sw DOUBLE, 
 																xp DOUBLE, 
+																rxp DOUBLE, 
 																nxp DOUBLE, 
 																rnb DOUBLE, 
 																nel DOUBLE,
-																me DOUBLE)" , -1, out stmt);
+																me DOUBLE,
+																udp DOUBLE,
+																xs DOUBLE,
+																bxs DOUBLE,
+																xz DOUBLE,
+																xl DOUBLE,
+																cl DOUBLE,
+																xa DOUBLE,
+																ndf DOUBLE,
+																adf DOUBLE,
+																ndfo DOUBLE,
+																nfc DOUBLE,
+																elos DOUBLE,
+																ca DOUBLE,
+																p DOUBLE,
+																mg DOUBLE,
+																na DOUBLE,
+																k DOUBLE)" , -1, out stmt);
 		rc = stmt.step();
 		if ( rc != 0 ) {
 			stderr.printf ("SQL error RationHinzufuegen: %d, %s\n", rc, db.errmsg ());
@@ -155,13 +244,33 @@ public class clirabDb{
 								+ m.art + "','"
 								+ "tierBedarf" + "','"
 								+ m.menge.to_string() + "','"
+								+ m.preis.to_string() + "','"
 								+ m.TM.to_string() + "','"
 								+ m.RF.to_string() + "','"
+								+ m.SW.to_string() + "','"
 								+ m.XP.to_string() + "','"
+								+ m.rXP.to_string() + "','"
 								+ m.nXP.to_string() + "','"
 								+ m.RNB.to_string() + "','"
 								+ m.NEL.to_string() + "','"
-								+ m.ME.to_string() + "' )", -1, out stmt, null);
+								+ m.ME.to_string() + "','"
+								+ m.UDP.to_string() + "','"
+								+ m.XS.to_string() + "','"
+								+ m.bXS.to_string() + "','"
+								+ m.XZ.to_string() + "','"
+								+ m.XL.to_string() + "','"
+								+ m.CL.to_string() + "','"
+								+ m.XA.to_string() + "','"
+								+ m.NDF.to_string() + "','"
+								+ m.ADF.to_string() + "','"
+								+ m.NDFo.to_string() + "','"
+								+ m.NFC.to_string() + "','"
+								+ m.ELOS.to_string() + "','"
+								+ m.Ca.to_string() + "','"
+								+ m.P.to_string() + "','"
+								+ m.Mg.to_string() + "','"
+								+ m.Na.to_string() + "','"
+								+ m.K.to_string() + "' )", -1, out stmt, null);
 			rc = stmt.step();
 
 			if ( rc != 0 ) {
@@ -181,6 +290,9 @@ public class clirabDb{
 			stderr.printf ("SQL error BedarfHinzufuegen: %d, %s\n", rc, db.errmsg ());
 			rc = 0;
 		}
+		//Tierzahl speichern
+		rc = db.prepare_v2("UPDATE 'rat_" + r.name + "' SET menge = '" + r.tiere.to_string() + "' WHERE id = '0'", -1, out stmt, null);
+		rc = stmt.step();
 		foreach (mittel m in r.tierBedarf){
 			rc = db.prepare_v2("INSERT INTO 'rat_" + r.name + "' VALUES (
 								(SELECT 1 + max(id) FROM 'rat_" + r.name + "'),'"
@@ -188,13 +300,33 @@ public class clirabDb{
 								+ m.art + "','"
 								+ "tierBedarf" + "','"
 								+ m.menge.to_string() + "','"
+								+ m.preis.to_string() + "','"
 								+ m.TM.to_string() + "','"
 								+ m.RF.to_string() + "','"
+								+ m.SW.to_string() + "','"
 								+ m.XP.to_string() + "','"
+								+ m.rXP.to_string() + "','"
 								+ m.nXP.to_string() + "','"
 								+ m.RNB.to_string() + "','"
 								+ m.NEL.to_string() + "','"
-								+ m.ME.to_string() + "' )", -1, out stmt, null);
+								+ m.ME.to_string() + "','"
+								+ m.UDP.to_string() + "','"
+								+ m.XS.to_string() + "','"
+								+ m.bXS.to_string() + "','"
+								+ m.XZ.to_string() + "','"
+								+ m.XL.to_string() + "','"
+								+ m.CL.to_string() + "','"
+								+ m.XA.to_string() + "','"
+								+ m.NDF.to_string() + "','"
+								+ m.ADF.to_string() + "','"
+								+ m.NDFo.to_string() + "','"
+								+ m.NFC.to_string() + "','"
+								+ m.ELOS.to_string() + "','"
+								+ m.Ca.to_string() + "','"
+								+ m.P.to_string() + "','"
+								+ m.Mg.to_string() + "','"
+								+ m.Na.to_string() + "','"
+								+ m.K.to_string() + "' )", -1, out stmt, null);
 			rc = stmt.step();
 			if ( rc != 0 ) {
 				stderr.printf ("SQL error BedarfHinzufuegen: %d, %s\n", rc, db.errmsg ());
@@ -207,14 +339,34 @@ public class clirabDb{
 								+ m.name + "','"
 								+ m.art + "','"
 								+ "grundKomponenten" + "','"
-								+ (m.menge * r.tiere).to_string() + "','"
+								+ m.menge.to_string() + "','"
+								+ m.preis.to_string() + "','"
 								+ m.TM.to_string() + "','"
 								+ m.RF.to_string() + "','"
+								+ m.SW.to_string() + "','"
 								+ m.XP.to_string() + "','"
+								+ m.rXP.to_string() + "','"
 								+ m.nXP.to_string() + "','"
 								+ m.RNB.to_string() + "','"
 								+ m.NEL.to_string() + "','"
-								+ m.ME.to_string() + "' )", -1, out stmt, null);
+								+ m.ME.to_string() + "','"
+								+ m.UDP.to_string() + "','"
+								+ m.XS.to_string() + "','"
+								+ m.bXS.to_string() + "','"
+								+ m.XZ.to_string() + "','"
+								+ m.XL.to_string() + "','"
+								+ m.CL.to_string() + "','"
+								+ m.XA.to_string() + "','"
+								+ m.NDF.to_string() + "','"
+								+ m.ADF.to_string() + "','"
+								+ m.NDFo.to_string() + "','"
+								+ m.NFC.to_string() + "','"
+								+ m.ELOS.to_string() + "','"
+								+ m.Ca.to_string() + "','"
+								+ m.P.to_string() + "','"
+								+ m.Mg.to_string() + "','"
+								+ m.Na.to_string() + "','"
+								+ m.K.to_string() + "' )", -1, out stmt, null);
 			rc = stmt.step();
 			if ( rc != 0 ) {
 				stderr.printf ("SQL error BedarfHinzufuegen: %d, %s\n", rc, db.errmsg ());
@@ -228,13 +380,33 @@ public class clirabDb{
 								+ m.art + "','"
 								+ "kraftKomponenten" + "','"
 								+ m.menge.to_string() + "','"
+								+ m.preis.to_string() + "','"
 								+ m.TM.to_string() + "','"
 								+ m.RF.to_string() + "','"
+								+ m.SW.to_string() + "','"
 								+ m.XP.to_string() + "','"
+								+ m.rXP.to_string() + "','"
 								+ m.nXP.to_string() + "','"
 								+ m.RNB.to_string() + "','"
 								+ m.NEL.to_string() + "','"
-								+ m.ME.to_string() + "' )", -1, out stmt, null);
+								+ m.ME.to_string() + "','"
+								+ m.UDP.to_string() + "','"
+								+ m.XS.to_string() + "','"
+								+ m.bXS.to_string() + "','"
+								+ m.XZ.to_string() + "','"
+								+ m.XL.to_string() + "','"
+								+ m.CL.to_string() + "','"
+								+ m.XA.to_string() + "','"
+								+ m.NDF.to_string() + "','"
+								+ m.ADF.to_string() + "','"
+								+ m.NDFo.to_string() + "','"
+								+ m.NFC.to_string() + "','"
+								+ m.ELOS.to_string() + "','"
+								+ m.Ca.to_string() + "','"
+								+ m.P.to_string() + "','"
+								+ m.Mg.to_string() + "','"
+								+ m.Na.to_string() + "','"
+								+ m.K.to_string() + "' )", -1, out stmt, null);
 			rc = stmt.step();
 			if ( rc != 0 ) {
 				stderr.printf ("SQL error BedarfHinzufuegen: %d, %s\n", rc, db.errmsg ());
@@ -305,13 +477,33 @@ public class clirabDb{
 					tmpMittel.name = stmt.column_text(1);
 					tmpMittel.art = stmt.column_text(2);
 					tmpMittel.menge = stmt.column_double(4);
-					tmpMittel.TM = stmt.column_double(5);
-					tmpMittel.RF=stmt.column_double(6);
-					tmpMittel.XP=stmt.column_double(7);
-					tmpMittel.nXP=stmt.column_double(8);
-					tmpMittel.RNB=stmt.column_double(9);
-					tmpMittel.NEL=stmt.column_double(10);
-					tmpMittel.ME=stmt.column_double(11);
+					tmpMittel.preis = stmt.column_double(5);
+					tmpMittel.TM  = stmt.column_double(6);
+					tmpMittel.RF  = stmt.column_double(7);
+					tmpMittel.SW  = stmt.column_double(8);
+					tmpMittel.XP  = stmt.column_double(9);
+					tmpMittel.rXP = stmt.column_double(10);
+					tmpMittel.nXP = stmt.column_double(11);
+					tmpMittel.RNB = stmt.column_double(12);
+					tmpMittel.NEL = stmt.column_double(13);
+					tmpMittel.ME  = stmt.column_double(14);
+					tmpMittel.UDP = stmt.column_double(15);
+					tmpMittel.XS  = stmt.column_double(16);
+					tmpMittel.bXS = stmt.column_double(17);
+					tmpMittel.XZ  = stmt.column_double(18);
+					tmpMittel.XL  = stmt.column_double(19);
+					tmpMittel.CL  = stmt.column_double(20);
+					tmpMittel.XA  = stmt.column_double(21);
+					tmpMittel.NDF = stmt.column_double(22);
+					tmpMittel.ADF = stmt.column_double(23);
+					tmpMittel.NDFo= stmt.column_double(24);
+					tmpMittel.NFC = stmt.column_double(25);
+					tmpMittel.ELOS= stmt.column_double(26);
+					tmpMittel.Ca  = stmt.column_double(27);
+					tmpMittel.P   = stmt.column_double(28);
+					tmpMittel.Mg  = stmt.column_double(29);
+					tmpMittel.Na  = stmt.column_double(30);
+					tmpMittel.K   = stmt.column_double(31);
 					if(stmt.column_text(3) == "tierBedarf"){
 						tierBedarf += tmpMittel;
 					}else if(stmt.column_text(3) == "grundKomponenten"){

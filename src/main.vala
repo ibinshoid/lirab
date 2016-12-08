@@ -2,6 +2,7 @@ using Sqlite;
 using Gtk;
 using lirab;
 
+const string version = "0.2";
 string datenVerzeichnis;
 string uiVerzeichnis;
 clirabDb lirabDb;
@@ -19,15 +20,14 @@ public static int main (string[] args) {
 	lirabDb = new clirabDb();
 
 	//Nach .ui dateien suchen
-	if(File.new_for_path(Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/../ui").query_file_type(0) == FileType.DIRECTORY){
-		uiVerzeichnis = Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/../ui";
+	if(File.new_for_path(Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui").query_file_type(0) == FileType.DIRECTORY){
+		uiVerzeichnis = Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui";
 	}else if(File.new_for_path("/usr/local/share/lirab/ui").query_file_type(0) == FileType.DIRECTORY){
 		uiVerzeichnis = "/usr/local/share/lirab/ui";
 	}else if(File.new_for_path("/usr/share/lirab").query_file_type(0) == FileType.DIRECTORY){
 		uiVerzeichnis = "/usr/share/lirab/ui";
 	}else{print("FEHLER! Verzeichnis mit den ui-Dateien konnte nicht gefunden werden"); return 1;}
 	Environment.set_current_dir(uiVerzeichnis);
-
 	//Wenn Datenbank nicht da ist, dann erzeugen
 	if(File.new_for_path(datenVerzeichnis + "/lirab.sqlite").query_exists()){
 	}else{
@@ -39,12 +39,11 @@ public static int main (string[] args) {
 	mittelFenster = new cmittelFenster();
 	hauptFenster = new chauptFenster();
 	rationFenster = new crationFenster();
-	treestore = new TreeStore(6, typeof(int), typeof(string), typeof(double), typeof(double), typeof(double), typeof(double), typeof(double), -1);
 	mittelFenster.mittelLesen();
 	hauptFenster.mittelLesen();
 	rationFenster.rationenLesen();
-	hauptFenster.auswertungBauen();
 	hauptFenster.window1.show_all();
+	rationFenster.window4.show_all();
 	Gtk.main ();
     return 0;
 }
@@ -119,6 +118,19 @@ public string getTreeViewName(TreeView tv){
 		i = wert.get_string();
 	}
 return i;
+}
+public mittel get_mittel(ComboBox cb){
+	TreeIter iter =  TreeIter();	
+	GLib.Value wert;
+	mittel mi = mittel();
+	cb.get_active_iter(out iter);
+	treestore.get_value(iter, 0, out wert);
+	foreach (mittel m in lirabDb.mittelLesen()){
+		if (m.id == wert.get_int()){
+			mi = m;
+		}
+	}
+	return mi;
 }
 		
 
