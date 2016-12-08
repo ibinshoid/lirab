@@ -1,11 +1,11 @@
 
 [Desktop Entry]
 Encoding=UTF-8
-Name=LASK
-Comment=Ackerschlagkartei
-GenericName=Ackerschlagkartei
-Exec=lask
-Icon=lask
+Name=Lirab
+Comment=Rationsberechnung
+GenericName=Rationsberechnung
+Exec=lirab
+Icon=lirab
 Terminal=false
 StartupNotify=true
 Type=Application
