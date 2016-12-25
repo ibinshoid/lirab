@@ -19,7 +19,7 @@ public class chauptFenster {
 	private VBox vbox5;
 	private VBox vbox6;
 	private VBox vbox11;
-
+	
 	public chauptFenster() {	
 	//Hauptfenster zusammenbauen
 		builder.add_from_file ("lirab.ui");
@@ -126,10 +126,21 @@ public class chauptFenster {
 		
 		rat = lirabDb.rationLesen(name);
 		//Tab bauen
-		ratTab = new crationTab(rat);
-		this.notebook1.append_page(ratTab, new Label(""));
-		hauptFenster.notebook1.set_tab_label_text(ratTab, rat.name);
-		this.notebook1.set_current_page(this.notebook1.get_n_pages() - 1);
+		if (rat.art == "Milchkühe"){
+			ratTab = new crationTabKuh(rat);
+			this.notebook1.append_page(ratTab, new Label(rat.name));
+			this.notebook1.set_current_page(this.notebook1.get_n_pages() - 1);
+		}else if (rat.art == "Färsen"){
+			rat.tierBedarf[0].ME = rat.tierBedarf[0].NEL;
+			ratTab = new crationTabFaerse(rat);
+			this.notebook1.append_page(ratTab, new Label(rat.name));
+			this.notebook1.set_current_page(this.notebook1.get_n_pages() - 1);
+		}else if (rat.art == "Mastbullen"){
+			rat.tierBedarf[0].ME = rat.tierBedarf[0].NEL;
+			ratTab = new crationTabBulle(rat);
+			this.notebook1.append_page(ratTab, new Label(rat.name));
+			this.notebook1.set_current_page(this.notebook1.get_n_pages() - 1);
+		}
 	}
 	
 	public void rationSpeichern(){
@@ -142,9 +153,24 @@ public class chauptFenster {
 	public void rationSchliessen(){
 	//Aktuellen Tab schließen
 		crationTab tmpTab;
+		
 		tmpTab = this.notebook1.get_nth_page(this.notebook1.get_current_page()) as crationTab;
-		tmpTab.destroy();
-		tmpTab  = null;
+		if(tmpTab.geaendert == 1){
+			Dialog dialog = new Dialog.with_buttons("Frage",hauptFenster.window1,Gtk.DialogFlags.MODAL,
+															Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
+															Gtk.Stock.OK, Gtk.ResponseType.OK);
+			dialog.get_content_area().add(new Label("Ration wurde geändert. Ohne speichern schließen? \nAlle Änderungen gehen verloren\n"));			
+			dialog.show_all();
+			
+			if (dialog.run() == Gtk.ResponseType.OK) {
+				tmpTab.destroy();
+				tmpTab  = null;
+				dialog.close();
+			}else{dialog.close();}
+		}else{
+			tmpTab.destroy();
+			tmpTab  = null;
+		}
 	}
 
 	

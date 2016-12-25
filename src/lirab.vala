@@ -118,6 +118,7 @@ namespace lirab{
 		public int wo;
 		public double menge = 0;
 		public int tiere = 1;
+		
 		public komponente(mittel mi, int pos){
 		//Constructor
 			wo = pos;
@@ -147,7 +148,7 @@ namespace lirab{
 			this.auswertung.label4.set_text(doubleparse(fmMittel.XP * kgts));
 			this.auswertung.label5.set_text(doubleparse(fmMittel.nXP * kgts));
 			this.auswertung.label6.set_text(doubleparse(fmMittel.RNB * kgts));
-			this.auswertung.label7.set_text(doubleparse(fmMittel.NEL * kgts));
+//			this.auswertung.label7.set_text(doubleparse(fmMittel.NEL * kgts));
 			anders();
 		}
 	}
@@ -159,7 +160,7 @@ namespace lirab{
 		private Label label0 = new Label("");
 		private Label label1 = new Label("XP");
 		private Label label2 = new Label("nXP");
-		private Label label3 = new Label("NEL");
+		public Label label3 = new Label("NEL");
 		public SpinButton spinbutton1 = new SpinButton.with_range(0,1000,1);
 		public SpinButton spinbutton2 = new SpinButton.with_range(0,1000,1);
 		public SpinButton spinbutton3 = new SpinButton.with_range(0,1000,1);

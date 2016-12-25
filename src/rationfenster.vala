@@ -33,14 +33,15 @@ public class crationFenster {
 		comboboxtext1 = builder.get_object ("comboboxtext1") as ComboBoxText;
 		grid14 = builder.get_object ("grid14") as Grid;
 		liststore3 = builder.get_object ("liststore3") as Gtk.ListStore;
-		this.window4.destroy.connect (Gtk.main_quit);
 		
 		//Ereignisse verbinden
+		this.window4.destroy.connect (Gtk.main_quit);
 		button5.clicked.connect(rationAnlegen);
 		button7.clicked.connect(rationLaden);
 		button8.clicked.connect(rationBauen);
 		button9.clicked.connect(()=>{rationBearbeiten(lirabDb.rationLesen(getTreeViewName(rationFenster.treeview2)));});
 		button10.clicked.connect(rationLoeschen);
+		comboboxtext1.changed.connect(rationBauen);
 	}
 
 	public void rationenLesen(){
@@ -80,10 +81,10 @@ public class crationFenster {
 	public void rationAendern(ration r){
 	//Geänderte Ration speichern
         ration rat = r;
-        mittel[] m = {mittel()};
+        mittel[] m = {};
         
 		m.resize(0);
-		foreach (bedarf be in rationFenster.b){
+		foreach (bedarf be in this.b){
 			be.tierBedarf.art = "Bedarf";
 			m += be.tierBedarf;
 		}
@@ -99,16 +100,25 @@ public class crationFenster {
         rationFenster.entry1.set_has_frame(true);
         rationFenster.entry1.set_text("");
         this.comboboxtext1.set_button_sensitivity(SensitivityType.AUTO);
-        rationFenster.comboboxtext1.set_active(0);
-		foreach (bedarf be in rationFenster.b){
+		foreach (bedarf be in this.b){
 			be.destroy();
 		}
-		rationFenster.b.length = 0;
-		rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
-		rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
-		rationFenster.grid14.add(new Separator(Orientation.HORIZONTAL));
-		rationFenster.b += new bedarf("Bedarf je Liter Milch", rationFenster.b.length);
-		rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
+		this.b.length = 0;
+		if(this.comboboxtext1.get_active_text() == "Milchkühe"){
+			rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
+			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
+			rationFenster.grid14.add(new Separator(Orientation.HORIZONTAL));
+			rationFenster.b += new bedarf("Bedarf je Liter Milch", rationFenster.b.length);
+			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
+		}else if(this.comboboxtext1.get_active_text() == "Färsen"){
+			rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
+			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
+			rationFenster.b[rationFenster.b.length - 1].label3.set_text("ME");
+		}else if(this.comboboxtext1.get_active_text() == "Mastbullen"){
+			rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
+			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
+			rationFenster.b[rationFenster.b.length - 1].label3.set_text("ME");
+		}
 		rationFenster.grid14.show_all();
 		rationFenster.window2.show();
 	}
@@ -144,12 +154,15 @@ public class crationFenster {
 		int i = 0;
 		Entry entry;
 		string name = "";
-        ration rat;
+        ration rat = r;
+
 		//Fenster bauen
+        this.comboboxtext1.set_button_sensitivity(SensitivityType.OFF);
+        entry = rationFenster.comboboxtext1.get_child() as Entry;
+        entry.set_text(rat.art);
 		rationFenster.rationBauen();
         //Werte setzen
         name = getTreeViewName(rationFenster.treeview2);
-        rat = r;
         rationFenster.entry1.set_editable(false);
         rationFenster.entry1.set_has_frame(false);
         rationFenster.entry1.set_text(rat.name);
@@ -157,9 +170,9 @@ public class crationFenster {
         entry = rationFenster.comboboxtext1.get_child() as Entry;
         entry.set_text(rat.art);
         foreach (mittel be in rat.tierBedarf){
-	        rationFenster.b[i].spinbutton1.set_value(be.XP);
-	        rationFenster.b[i].spinbutton2.set_value(be.nXP);
-	        rationFenster.b[i].spinbutton3.set_value(be.NEL);
+	        this.b[i].spinbutton1.set_value(be.XP);
+	        this.b[i].spinbutton2.set_value(be.nXP);
+	        this.b[i].spinbutton3.set_value(be.NEL);
 	        i += 1;
 		}
 		this.button5.set_label("Ändern");
