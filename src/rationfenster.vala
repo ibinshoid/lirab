@@ -2,46 +2,32 @@ using Gtk;
 using lirab;
 
 public class crationFenster {
-	private Builder builder = new Builder();
+	private Builder builder = new Builder.from_file("lirab.ui");
 	public Window window4;
-	public Window window2;
-	private Button button5;
 	private Button button7;
 	private Button button8;
 	private Button button9;
 	private Button button10;
-	private Entry entry1;
-	private ComboBoxText comboboxtext1;
 	private Gtk.ListStore liststore3;
 	private TreeView treeview2;
-	private Grid grid14;
- 	private	bedarf[] b = {};
 	
 	public crationFenster(){	
 	//Hauptfenster zusammenbauen
-		builder.add_from_file ("lirab.ui");
         builder.connect_signals (this);
-		window2 = builder.get_object ("window2") as Window;
 		window4 = builder.get_object ("window4") as Window;
-		button5 = builder.get_object ("button5") as Button;
 		button7 = builder.get_object ("button7") as Button;
 		button8 = builder.get_object ("button8") as Button;
 		button9 = builder.get_object ("button9") as Button;
 		button10 = builder.get_object ("button10") as Button;
-		entry1 = builder.get_object ("entry1") as Entry;
 		treeview2 = builder.get_object ("treeview2") as TreeView;
-		comboboxtext1 = builder.get_object ("comboboxtext1") as ComboBoxText;
-		grid14 = builder.get_object ("grid14") as Grid;
 		liststore3 = builder.get_object ("liststore3") as Gtk.ListStore;
 		
 		//Ereignisse verbinden
 		this.window4.destroy.connect (Gtk.main_quit);
-		button5.clicked.connect(rationAnlegen);
 		button7.clicked.connect(rationLaden);
-		button8.clicked.connect(rationBauen);
-		button9.clicked.connect(()=>{rationBearbeiten(lirabDb.rationLesen(getTreeViewName(rationFenster.treeview2)));});
+		button8.clicked.connect(rationNeu);
+		button9.clicked.connect(rationBearbeiten);
 		button10.clicked.connect(rationLoeschen);
-		comboboxtext1.changed.connect(rationBauen);
 	}
 
 	public void rationenLesen(){
@@ -52,86 +38,33 @@ public class crationFenster {
 		}
 		
 	}
-	
-	public void rationAnlegen(){
-	//Neue leere Ration in Datenbank anlegen
-        ration rat = ration();
-        mittel[] m = {mittel()};
-
-		rat.id = -1;
-		rat.name = rationFenster.entry1.get_text();
-		rat.art = rationFenster.comboboxtext1.get_active_text();
+	public void rationNeu(){
+	//Ration anlegen
+		rationEdit = new crationEdit();
 		
-		rat.grundKomponenten = m;
-		rat.kraftKomponenten = m;
-		m.resize(0);
-		m += new bedarf(rat.name, 0).tierBedarf;
-		m[0].art = rat.art;
-		m[0].menge = 1;
-		foreach (bedarf be in rationFenster.b){
-			be.tierBedarf.art = "Bedarf";
-			m += be.tierBedarf;
-		}
-		rat.tierBedarf = m;
-		lirabDb.rationHinzufuegen(rat);
-		rationFenster.rationenLesen();
-		rationFenster.window2.hide();
-	}
-	
-	public void rationAendern(ration r){
-	//Geänderte Ration speichern
-        ration rat = r;
-        mittel[] m = {};
-        
-		m.resize(0);
-		foreach (bedarf be in this.b){
-			be.tierBedarf.art = "Bedarf";
-			m += be.tierBedarf;
-		}
-		rat.tierBedarf = m;
-		lirabDb.rationSpeichern(rat);
+		ration r = rationEdit.rationErzeugen();
+		lirabDb.rationHinzufuegen(r);
+		this.rationenLesen();
 	}
 
-	public void rationBauen(){
-	//Fenster zum Ration anlegen bauen und anzeigen
-        this.button5.set_label("Anlegen");
-		this.button5.clicked.connect(rationAnlegen);
-        rationFenster.entry1.set_editable(true);
-        rationFenster.entry1.set_has_frame(true);
-        rationFenster.entry1.set_text("");
-        this.comboboxtext1.set_button_sensitivity(SensitivityType.AUTO);
-		foreach (bedarf be in this.b){
-			be.destroy();
-		}
-		this.b.length = 0;
-		if(this.comboboxtext1.get_active_text() == "Milchkühe"){
-			rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
-			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
-			rationFenster.grid14.add(new Separator(Orientation.HORIZONTAL));
-			rationFenster.b += new bedarf("Bedarf je Liter Milch", rationFenster.b.length);
-			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
-		}else if(this.comboboxtext1.get_active_text() == "Färsen"){
-			rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
-			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
-			rationFenster.b[rationFenster.b.length - 1].label3.set_text("ME");
-		}else if(this.comboboxtext1.get_active_text() == "Mastbullen"){
-			rationFenster.b += new bedarf("Bedarf zur Erhaltung", rationFenster.b.length);
-			rationFenster.grid14.add(rationFenster.b[rationFenster.b.length - 1]);
-			rationFenster.b[rationFenster.b.length - 1].label3.set_text("ME");
-		}
-		rationFenster.grid14.show_all();
-		rationFenster.window2.show();
+	public void rationBearbeiten(){
+	//Ration bearbeiten Fenster öffnen
+		rationEdit = new crationEdit();
+		
+		ration r = rationEdit.rationBearbeiten(lirabDb.rationLesen(getTreeViewName(rationFenster.treeview2)));
+		lirabDb.rationSpeichern(r);
 	}
-	
+
 	public void rationLoeschen(){
     //Ration löschen
 		string ration = "";
         ration = getTreeViewName(rationFenster.treeview2);
         Dialog dialog = new Dialog.with_buttons("Frage",
                                                     hauptFenster.window1,Gtk.DialogFlags.MODAL,
-                                                    Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
-                                                    Gtk.Stock.OK, Gtk.ResponseType.OK);
+                                                    "Abbrechen", Gtk.ResponseType.CANCEL,
+                                                    "Ok", Gtk.ResponseType.OK, null);
         dialog.get_content_area().add(new Label("Ration wirklich Löschen? \nAlle Daten gehen verloren\n"));          
+		dialog.set_decorated(true);
         dialog.show_all();
         
         if (dialog.run() == Gtk.ResponseType.OK) {
@@ -144,40 +77,8 @@ public class crationFenster {
 	
 	public void rationLaden(){
     //Ration laden
-		
 		hauptFenster.rationLaden(getTreeViewName(rationFenster.treeview2));
 		rationFenster.window4.hide();
 	}
-
-	public void rationBearbeiten(ration r){
-	//Fenster zum Ration bearbeiten bauen und anzeigen
-		int i = 0;
-		Entry entry;
-		string name = "";
-        ration rat = r;
-
-		//Fenster bauen
-        this.comboboxtext1.set_button_sensitivity(SensitivityType.OFF);
-        entry = rationFenster.comboboxtext1.get_child() as Entry;
-        entry.set_text(rat.art);
-		rationFenster.rationBauen();
-        //Werte setzen
-        name = getTreeViewName(rationFenster.treeview2);
-        rationFenster.entry1.set_editable(false);
-        rationFenster.entry1.set_has_frame(false);
-        rationFenster.entry1.set_text(rat.name);
-        this.comboboxtext1.set_button_sensitivity(SensitivityType.OFF);
-        entry = rationFenster.comboboxtext1.get_child() as Entry;
-        entry.set_text(rat.art);
-        foreach (mittel be in rat.tierBedarf){
-	        this.b[i].spinbutton1.set_value(be.XP);
-	        this.b[i].spinbutton2.set_value(be.nXP);
-	        this.b[i].spinbutton3.set_value(be.NEL);
-	        i += 1;
-		}
-		this.button5.set_label("Ändern");
-		this.button5.clicked.connect(()=>{this.rationAendern(rat);});
-	}
-
 }
 

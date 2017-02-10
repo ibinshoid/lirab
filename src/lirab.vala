@@ -1,7 +1,9 @@
 using Gtk;
+using Pango;
 
 namespace lirab{
 	public struct mittel{
+	//Futtermittel
 		public int id ;
 		public string name;
 		public string art;
@@ -44,28 +46,102 @@ namespace lirab{
 		public mittel[] kraftKomponenten;
 		public mittel[] tierBedarf;
 		
+		public mittel get_summe(){
+			mittel sMittel = mittel();
+			double kgts = 0;	
+			
+			foreach (mittel m in grundKomponenten){
+				kgts = m.TM * m.menge / 1000;
+				sMittel.TM += (kgts);
+				sMittel.RF += (m.RF * kgts);
+				sMittel.SW += (m.SW * kgts);
+				sMittel.XP += (m.XP * kgts);
+				sMittel.nXP += (m.nXP * kgts);
+				sMittel.RNB += (m.RNB * kgts);
+				sMittel.NEL += (m.NEL * kgts);
+				sMittel.ME += (m.ME * kgts);
+				sMittel.UDP += (m.UDP * kgts);
+				sMittel.XS += (m.XS * kgts);
+				sMittel.bXS += (m.bXS * kgts);
+				sMittel.XZ += (m.XZ * kgts);
+				sMittel.XL += (m.XL * kgts);
+				sMittel.CL += (m.CL * kgts);
+				sMittel.XA += (m.XA * kgts);
+				sMittel.NDF += (m.NDF * kgts);
+				sMittel.ADF += (m.ADF * kgts);
+				sMittel.NDFo += (m.NDFo * kgts);
+				sMittel.NFC += (m.NFC * kgts);
+				sMittel.ELOS += (m.ELOS * kgts);
+				sMittel.Ca += (m.Ca * kgts);
+				sMittel.P += (m.P * kgts);
+				sMittel.Mg += (m.Mg * kgts);
+				sMittel.Na += (m.Na * kgts);
+				sMittel.K += (m.K * kgts);
+			}
+			foreach (mittel m in kraftKomponenten){
+				kgts = m.TM * m.menge / 1000;
+				sMittel.TM += (kgts);
+				sMittel.RF += (m.RF * kgts);
+				sMittel.SW += (m.SW * kgts);
+				sMittel.XP += (m.XP * kgts);
+				sMittel.nXP += (m.nXP * kgts);
+				sMittel.RNB += (m.RNB * kgts);
+				sMittel.NEL += (m.NEL * kgts);
+				sMittel.ME += (m.ME * kgts);
+				sMittel.UDP += (m.UDP * kgts);
+				sMittel.XS += (m.XS * kgts);
+				sMittel.bXS += (m.bXS * kgts);
+				sMittel.XZ += (m.XZ * kgts);
+				sMittel.XL += (m.XL * kgts);
+				sMittel.CL += (m.CL * kgts);
+				sMittel.XA += (m.XA * kgts);
+				sMittel.NDF += (m.NDF * kgts);
+				sMittel.ADF += (m.ADF * kgts);
+				sMittel.NDFo += (m.NDFo * kgts);
+				sMittel.NFC += (m.NFC * kgts);
+				sMittel.ELOS += (m.ELOS * kgts);
+				sMittel.Ca += (m.Ca * kgts);
+				sMittel.P += (m.P * kgts);
+				sMittel.Mg += (m.Mg * kgts);
+				sMittel.Na += (m.Na * kgts);
+				sMittel.K += (m.K * kgts);
+			}
+			return sMittel;
+		}
+		
 	}
 	 
 	public class eing:Grid{
 	//Futterauswahl und -menge in der linken Spalte
 		public signal void weg();
 		public signal void anders();
+		public signal void buttonClick();
 		public Button button = new Button();
-		public Button entf = new Button.from_icon_name("gtk-cancel", IconSize.MENU);
+		public Button entf = new Button.from_icon_name("process-stop", IconSize.MENU);
 		public SpinButton spinbutton;
 		public Adjustment adjustment;
 		public CellRendererText cell;
 		
 		public eing(int id, string name){
 			//Eingabe bauen
+			Label label = new Label(name);
+			
 			this.spinbutton = new SpinButton.with_range(0, 10000,0.1);
 			this.spinbutton.set_digits(2);
-			this.button.set_label(name);
+			label.set_line_wrap(true);
+			label.set_max_width_chars(20);
+			label.set_ellipsize(EllipsizeMode.END);
+			label.set_lines(2);
+			this.button.add(label);
 			this.button.set_hexpand(true);
+			this.button.set_valign(Align.CENTER);
+			this.entf.set_valign(Align.CENTER);
+			this.entf.set_vexpand(false);
 			this.add(button);
 			this.add(spinbutton);
 			this.add(entf);
 			this.entf.clicked.connect(()=>{weg();});
+			this.button.clicked.connect(()=>{buttonClick();});
 			this.spinbutton.value_changed.connect(()=>{anders();});
 		}
 	}
@@ -126,6 +202,7 @@ namespace lirab{
 			this.eingabe = new eing(0, mi.name);
 			this.auswertung = new ausw();
 			//Ereignisse verbinden
+			this.eingabe.buttonClick.connect(this.mittelAendern);
 			this.eingabe.weg.connect(()=>{weg(wo);});
 			this.eingabe.anders.connect(update);
 			this.auswertung.label1.set_text(fmMittel.name);
@@ -137,13 +214,20 @@ namespace lirab{
 			this.auswertung.destroy();
 		}
 		
+		public void mittelAendern(){
+			mittelEdit = new cmittelEdit();
+			
+			this.fmMittel = mittelEdit.mittelBearbeiten(this.fmMittel);
+			this.update();
+		}
+		
 		public void update(){
 			double kgts = 0;
 			this.menge = this.eingabe.spinbutton.get_value();
-			this.fmMittel.menge = this.eingabe.spinbutton.get_value() / this.tiere;
+			this.fmMittel.menge = this.menge / this.tiere;
 			kgts = fmMittel.TM * fmMittel.menge / 1000;
 			this.auswertung.label1.set_text(fmMittel.name);
-			this.auswertung.label2.set_text(doubleparse(fmMittel.TM * fmMittel.menge / 1000));
+			this.auswertung.label2.set_text(doubleparse(kgts));
 			this.auswertung.label3.set_text(doubleparse(fmMittel.RF * kgts));
 			this.auswertung.label4.set_text(doubleparse(fmMittel.XP * kgts));
 			this.auswertung.label5.set_text(doubleparse(fmMittel.nXP * kgts));

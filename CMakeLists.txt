@@ -70,8 +70,10 @@ set(default_vala_flags
   "--target-glib" "${GLIB2.0_VERSION}"
   #"--enable-experimental"
   #"--fatal-warnings"
+  "-D" "${CMAKE_SYSTEM_NAME}"
+  "-X" "-mwindows"
 )
-
+link_libraries(${DEPS_LIBRARIES} -lm)
 include(ValaPkgs)
 vala_pkgs(VALA_C
   PACKAGES

@@ -1,3 +1,14 @@
+0.3.0
+- compiliert jetzt auch mit mingw für Windoofs
+- eigene Rationstypen für Färsen und Bullen
+- Futtermittel können bearbeitet werden
+- Rationen können besser bearbeitet werden
+- Alle Rationen haben eine Listenansicht
+- Bessere Tabverwaltung
+- Beim Schließen der Tabs wird nachgefragt
+- Zahlen werden besser gerundet
+- Viele kleine Verbesserungen
+
 0.2.0
 - compiliert jetzt auch mit glib >= 2.44
 - Es können mehrere Rationen als Tab geladen werden

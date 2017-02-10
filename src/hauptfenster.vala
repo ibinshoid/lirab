@@ -2,11 +2,10 @@ using Gtk;
 using lirab;
 
 public class chauptFenster {
-	private Builder builder = new Builder();
+	private Builder builder = new Builder.from_file("lirab.ui");
 	public signal void readTreestore();
 	public signal void saveTab();
 	public Window window1;
-	public TreeStore treestore1;
 	private SpinButton spinbutton8;
 	private Label label23;
 	private Gtk.MenuItem menu4;
@@ -19,10 +18,16 @@ public class chauptFenster {
 	private VBox vbox5;
 	private VBox vbox6;
 	private VBox vbox11;
+	private Gtk.MenuItem menuitem5;
+	private Gtk.MenuItem menuitem6;
+	private Gtk.MenuItem menuitem7;
+	private Gtk.MenuItem menuitem8;
+	private Gtk.MenuItem menuitem9;
+	private Gtk.MenuItem menuitem10;
+	private Gtk.MenuItem imagemenuitem5;
 	
 	public chauptFenster() {	
 	//Hauptfenster zusammenbauen
-		builder.add_from_file ("lirab.ui");
         builder.connect_signals (this);
 		window1 = builder.get_object ("window1") as Window;
 		paned1 = builder.get_object ("paned1") as Paned;
@@ -34,14 +39,27 @@ public class chauptFenster {
 		grid16 =  builder.get_object ("grid16") as Gtk.Grid;
 		notebook1 = new Notebook();
 		grid11.add(notebook1);
-		treestore1 = builder.get_object ("treestore1") as TreeStore;
 		vbox1 = builder.get_object ("vbox1") as VBox;
 		vbox5 = builder.get_object ("vbox5") as VBox;
 		vbox6 = builder.get_object ("vbox6") as VBox;
 		vbox11 = builder.get_object ("vbox11") as VBox;
+		menuitem5 = builder.get_object ("menuitem5") as Gtk.MenuItem;
+		menuitem6 = builder.get_object ("menuitem6") as Gtk.MenuItem;
+		menuitem7 = builder.get_object ("menuitem7") as Gtk.MenuItem;
+		menuitem8 = builder.get_object ("menuitem8") as Gtk.MenuItem;
+		menuitem9 = builder.get_object ("menuitem9") as Gtk.MenuItem;
+		menuitem10 = builder.get_object ("menuitem10") as Gtk.MenuItem;
+		imagemenuitem5 = builder.get_object ("imagemenuitem5") as Gtk.MenuItem;
 		//Ereignisse verbinden
-		this.window1.destroy.connect (Gtk.main_quit);
+		this.window1.delete_event.connect(beenden);
 		mittelFenster.anders.connect(mittelLesen);
+		this.menuitem5.activate.connect(editFuttermittel);
+		this.menuitem6.activate.connect(rationenVerwalten);
+		this.menuitem7.activate.connect(rationSpeichern);
+		this.menuitem8.activate.connect(rationBearbeiten);
+		this.menuitem9.activate.connect(()=>{rationSchliessen(null);});
+		this.menuitem10.activate.connect(rationDrucken);
+		this.imagemenuitem5.activate.connect(()=>{this.window1.close();});
 	}
 	
 	
@@ -100,7 +118,7 @@ public class chauptFenster {
 			}else if (m.art == "Mineralfutter"){
 				tmptreestore.append(out iter2, iter[6]);
 				tmptreestore.set (iter2, 0, m.id, 1, m.name, 2, m.TM.to_string(), 3, m.RF.to_string(), 4, m.XP.to_string(), 5, m.nXP.to_string(), 6, m.RNB.to_string(), 7, doubleparse(m.NEL), 8, doubleparse(m.ME), -1);
-			}else if (m.art == "Sonstiges"){
+			}else{
 				tmptreestore.append(out iter2, iter[7]);
 				tmptreestore.set (iter2, 0, m.id, 1, m.name, 2, m.TM.to_string(), 3, m.RF.to_string(), 4, m.XP.to_string(), 5, m.nXP.to_string(), 6, m.RNB.to_string(), 7, doubleparse(m.NEL), 8, doubleparse(m.ME), -1);
 			}
@@ -114,62 +132,102 @@ public class chauptFenster {
 	}
 
 	public void rationBearbeiten(){
+		rationEdit = new crationEdit();
 		crationTab tmpTab;
+		ration r;
+		
 		tmpTab = this.notebook1.get_nth_page(this.notebook1.get_current_page()) as crationTab;
-		rationFenster.rationBearbeiten(tmpTab.rat);
+		if(tmpTab != null){
+			r = rationEdit.rationBearbeiten(tmpTab.rat);
+			tmpTab.rationAendern(r);
+		}
 	}
 
 	public void rationLaden(string name){
 	//ration laden und Gui bauen
 		ration rat;
-		crationTab ratTab;
+		crationTab ratTab = null;
+		Box box = new Box (Gtk.Orientation.HORIZONTAL, 0);
+		Button button = new Button.from_icon_name("process-stop", IconSize.MENU);
 		
 		rat = lirabDb.rationLesen(name);
 		//Tab bauen
+		box.set_hexpand(false);
+		button.set_relief(ReliefStyle.NONE);
+		box.add(new Label(rat.name));
+		box.add(button);
+		box.show_all();
 		if (rat.art == "Milchkühe"){
 			ratTab = new crationTabKuh(rat);
-			this.notebook1.append_page(ratTab, new Label(rat.name));
+			this.notebook1.append_page(ratTab, box);
 			this.notebook1.set_current_page(this.notebook1.get_n_pages() - 1);
 		}else if (rat.art == "Färsen"){
 			rat.tierBedarf[0].ME = rat.tierBedarf[0].NEL;
 			ratTab = new crationTabFaerse(rat);
-			this.notebook1.append_page(ratTab, new Label(rat.name));
+			this.notebook1.append_page(ratTab, box);
 			this.notebook1.set_current_page(this.notebook1.get_n_pages() - 1);
 		}else if (rat.art == "Mastbullen"){
 			rat.tierBedarf[0].ME = rat.tierBedarf[0].NEL;
 			ratTab = new crationTabBulle(rat);
-			this.notebook1.append_page(ratTab, new Label(rat.name));
+			this.notebook1.append_page(ratTab, box);
 			this.notebook1.set_current_page(this.notebook1.get_n_pages() - 1);
 		}
+		button.clicked.connect(()=>{rationSchliessen(ratTab, 1);});
 	}
 	
 	public void rationSpeichern(){
 	//Aktuelle Ration speichern
 		crationTab tmpTab;
 		tmpTab = this.notebook1.get_nth_page(this.notebook1.get_current_page()) as crationTab;
-		tmpTab.rationSpeichern();
+		if(tmpTab != null){
+			tmpTab.rationSpeichern();
+		}
 	}
 	
-	public void rationSchliessen(){
+	public void rationSchliessen(crationTab? tab, int i = 0){
 	//Aktuellen Tab schließen
 		crationTab tmpTab;
-		
-		tmpTab = this.notebook1.get_nth_page(this.notebook1.get_current_page()) as crationTab;
+
+		if(tab == null){
+			tmpTab = this.notebook1.get_nth_page(this.notebook1.get_current_page()) as crationTab;
+		}else{
+			tmpTab = tab;
+		}
 		if(tmpTab.geaendert == 1){
-			Dialog dialog = new Dialog.with_buttons("Frage",hauptFenster.window1,Gtk.DialogFlags.MODAL,
-															Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
-															Gtk.Stock.OK, Gtk.ResponseType.OK);
-			dialog.get_content_area().add(new Label("Ration wurde geändert. Ohne speichern schließen? \nAlle Änderungen gehen verloren\n"));			
+			Dialog dialog = new Dialog.with_buttons("Speichern?",hauptFenster.window1,Gtk.DialogFlags.MODAL,
+															"Abbrechen", Gtk.ResponseType.DELETE_EVENT,
+															"Schließen ohne Speichern", Gtk.ResponseType.CANCEL,
+															"Speichern", Gtk.ResponseType.OK);
+			dialog.get_content_area().add(new Label("Ration '" + tmpTab.rat.name + "' wurde geändert.\n"));			
+			dialog.set_decorated(true);
 			dialog.show_all();
 			
-			if (dialog.run() == Gtk.ResponseType.OK) {
+			switch(dialog.run()){
+			case Gtk.ResponseType.OK:
+				tmpTab.rationSpeichern();
+				if(i != 2){
+					tmpTab.destroy();
+					tmpTab  = null;
+				}
+				dialog.close();
+				break;
+			case Gtk.ResponseType.CANCEL:
+				tmpTab.geaendert = 0;
+				if(i != 2){
+					tmpTab.destroy();
+					tmpTab  = null;
+				}
+				dialog.close();
+				break;
+			case Gtk.ResponseType.DELETE_EVENT:
+				dialog.close();
+				break;
+			}
+		}else{
+			if(i != 2){
 				tmpTab.destroy();
 				tmpTab  = null;
-				dialog.close();
-			}else{dialog.close();}
-		}else{
-			tmpTab.destroy();
-			tmpTab  = null;
+			}
 		}
 	}
 
@@ -178,9 +236,29 @@ public class chauptFenster {
 		crationTab tmpTab;
 		
 		tmpTab = this.notebook1.get_nth_page(this.notebook1.get_current_page()) as crationTab;
-		auswertungFenster = new causwertungFenster(tmpTab.rat);
-		auswertungFenster.window6.show_all();
-		auswertungFenster.aendern();
+		if(tmpTab != null){
+			auswertungFenster = new causwertungFenster(tmpTab.rat);
+			auswertungFenster.window6.show_all();
+			auswertungFenster.aendern();
+		}
+	}
+	
+	public bool beenden(){
+	//Programm beenden
+		crationTab tmpTab;
+		int i = 0;
+		
+		foreach(Widget w in this.notebook1.get_children()){
+			tmpTab = w as crationTab;
+			this.rationSchliessen(tmpTab, 2);
+			if(tmpTab.geaendert == 1){
+				i += 1;
+			}
+		}
+		if(i == 0){
+			Gtk.main_quit();
+		}
+		return true;
 	}
 	
 }

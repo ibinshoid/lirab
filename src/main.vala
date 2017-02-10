@@ -2,12 +2,14 @@ using Sqlite;
 using Gtk;
 using lirab;
 
-const string version = "0.2";
+const string version = "0.3";
 string datenVerzeichnis;
 string uiVerzeichnis;
 clirabDb lirabDb;
 cmittelFenster mittelFenster;
+cmittelEdit mittelEdit;
 crationFenster rationFenster;
+crationEdit rationEdit;
 chauptFenster hauptFenster;
 causwertungFenster auswertungFenster;
 //ceditRation editRation;
@@ -16,18 +18,22 @@ ration aktRation;
 TreeStore treestore;
 	
 public static int main (string[] args) {
-	datenVerzeichnis = Environment.get_user_config_dir();
 	lirabDb = new clirabDb();
+	datenVerzeichnis = Environment.get_user_config_dir();
+#if Linux
+		if(File.new_for_path(Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui").query_file_type(0) == FileType.DIRECTORY){
+			uiVerzeichnis = Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui";
+		}else if(File.new_for_path("/usr/local/share/lirab/ui").query_file_type(0) == FileType.DIRECTORY){
+			uiVerzeichnis = "/usr/local/share/lirab/ui";
+		}else if(File.new_for_path("/usr/share/lirab").query_file_type(0) == FileType.DIRECTORY){
+			uiVerzeichnis = "/usr/share/lirab/ui";
+		}else{print("FEHLER! Verzeichnis mit den ui-Dateien konnte nicht gefunden werden"); return 1;}
+		Environment.set_current_dir(uiVerzeichnis);
+#elif Windows
+			Environment.set_current_dir(Environment.get_system_data_dirs()[Environment.get_system_data_dirs().length-2] + "\\lirab\\ui");
+#endif
 
-	//Nach .ui dateien suchen
-	if(File.new_for_path(Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui").query_file_type(0) == FileType.DIRECTORY){
-		uiVerzeichnis = Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui";
-	}else if(File.new_for_path("/usr/local/share/lirab/ui").query_file_type(0) == FileType.DIRECTORY){
-		uiVerzeichnis = "/usr/local/share/lirab/ui";
-	}else if(File.new_for_path("/usr/share/lirab").query_file_type(0) == FileType.DIRECTORY){
-		uiVerzeichnis = "/usr/share/lirab/ui";
-	}else{print("FEHLER! Verzeichnis mit den ui-Dateien konnte nicht gefunden werden"); return 1;}
-	Environment.set_current_dir(uiVerzeichnis);
+
 	//Wenn Datenbank nicht da ist, dann erzeugen
 	if(File.new_for_path(datenVerzeichnis + "/lirab.sqlite").query_exists()){
 	}else{
@@ -45,28 +51,27 @@ public static int main (string[] args) {
 	hauptFenster.window1.show_all();
 	rationFenster.window4.show_all();
 	Gtk.main ();
+print(doubleparse(0.1794) + "\n");
+print(doubleparse(12.129455) + "\n");
     return 0;
 }
 
 public string doubleparse(double dble, int nk=2){
-	string wert;
+    string wert;
 	string rueckwert;
-	int punkt;
-	wert = dble.to_string();
-	if (wert.index_of(".") < 1){
-		wert = wert + ".";	
+	wert = GLib.Math.round(dble * (Math.pow(10, nk))).to_string();
+	if(wert.length <= nk-1){
+		wert = GLib.Math.round(dble * (Math.pow(10, nk + 1))).to_string();
+		wert += string.nfill(nk - wert.length, '0');
+		rueckwert = wert.splice(-nk, -nk, "0,");
+	}else if(wert.length == nk){
+		rueckwert = wert.splice(-nk, -nk, "0,");
+	}else{
+		rueckwert = wert.splice(-nk, -nk, ",");
 	}
-	wert = wert + "000";
-	punkt = wert.index_of(".");
-	wert =wert.substring(punkt + 1, 3);
-	if (int.parse(wert.substring(wert.length - 1)) > 5){
-		wert =(int.parse(wert.substring(0, wert.length - 1))+1).to_string();
+	if(nk == 0){
+		rueckwert= GLib.Math.round(dble).to_string();
 	}
-	wert = wert.substring(0, nk);
-	if (nk > 0) {
-		wert = "," + wert; 
-	}
-	rueckwert = dble.to_string().substring(0, punkt ) + wert;
 	return rueckwert;
 }
 
@@ -117,8 +122,9 @@ public string getTreeViewName(TreeView tv){
 		model.get_value(iter, 1, out wert);
 		i = wert.get_string();
 	}
-return i;
+	return i;
 }
+
 public mittel get_mittel(ComboBox cb){
 	TreeIter iter =  TreeIter();	
 	GLib.Value wert;
@@ -132,5 +138,6 @@ public mittel get_mittel(ComboBox cb){
 	}
 	return mi;
 }
+
 		
 
