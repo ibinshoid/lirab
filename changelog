@@ -1,3 +1,8 @@
+0.3.1
+- Gesamtmenge wird richtig angezeigt
+- Programm lässt sich zuverlässiger beenden
+- Eingaben für Futtermengen rechtsbündig
+
 0.3.0
 - compiliert jetzt auch mit mingw für Windoofs
 - eigene Rationstypen für Färsen und Bullen
@@ -8,7 +13,7 @@
 - Beim Schließen der Tabs wird nachgefragt
 - Zahlen werden besser gerundet
 - Viele kleine Verbesserungen
-- lirab. ico hinzugefügt (für mingw)
+- lirab.ico hinzugefügt (für mingw)
 
 0.2.0
 - compiliert jetzt auch mit glib >= 2.44

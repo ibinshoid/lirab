@@ -247,6 +247,7 @@ public class chauptFenster {
 	//Programm beenden
 		crationTab tmpTab;
 		int i = 0;
+		bool b = true;
 		
 		foreach(Widget w in this.notebook1.get_children()){
 			tmpTab = w as crationTab;
@@ -256,9 +257,10 @@ public class chauptFenster {
 			}
 		}
 		if(i == 0){
+			b = false;
 			Gtk.main_quit();
 		}
-		return true;
+		return b;
 	}
 	
 }

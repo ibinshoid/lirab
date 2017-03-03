@@ -53,6 +53,7 @@ namespace lirab{
 			foreach (mittel m in grundKomponenten){
 				kgts = m.TM * m.menge / 1000;
 				sMittel.TM += (kgts);
+				sMittel.menge += m.menge * tiere;
 				sMittel.RF += (m.RF * kgts);
 				sMittel.SW += (m.SW * kgts);
 				sMittel.XP += (m.XP * kgts);
@@ -81,6 +82,7 @@ namespace lirab{
 			foreach (mittel m in kraftKomponenten){
 				kgts = m.TM * m.menge / 1000;
 				sMittel.TM += (kgts);
+				sMittel.menge += m.menge * tiere;
 				sMittel.RF += (m.RF * kgts);
 				sMittel.SW += (m.SW * kgts);
 				sMittel.XP += (m.XP * kgts);
@@ -128,6 +130,7 @@ namespace lirab{
 			
 			this.spinbutton = new SpinButton.with_range(0, 10000,0.1);
 			this.spinbutton.set_digits(2);
+			this.spinbutton.set_alignment(1);
 			label.set_line_wrap(true);
 			label.set_max_width_chars(20);
 			label.set_ellipsize(EllipsizeMode.END);

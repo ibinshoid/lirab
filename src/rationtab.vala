@@ -156,8 +156,6 @@ public class crationTab:Frame {
 
 	public void update(){
 	//Tabellenansicht aktualisieren
-		double kgts = 0;
-		double total = 0;
 		mittel[] tmpMittel = {};
 		mittel eMittel = mittel();
 		mittel sMittel = mittel();
@@ -180,8 +178,8 @@ public class crationTab:Frame {
 		}
 		rat.tierBedarf = tmpMittel;
 		//Summe anzeigen
-		this.label23.set_text(doubleparse(total) + " kg");
 		sMittel = rat.get_summe();
+		this.label23.set_text(doubleparse(sMittel.menge) + " kg");
 		summe.auswertung.label2.set_text(doubleparse(sMittel.TM));
 		summe.auswertung.label3.set_text(doubleparse(sMittel.RF));
 		summe.auswertung.label4.set_text(doubleparse(sMittel.XP));
@@ -410,6 +408,11 @@ public class crationTab:Frame {
 		
 		tierZahl = rat.tiere;
 		foreach (komponente k in this.grundFutter){
+			k.eingabe.spinbutton.set_value(k.eingabe.spinbutton.get_value() * this.spinbutton1.get_value() / tierZahl);
+			k.tiere = (int)this.spinbutton1.get_value();
+			k.update();
+		}
+		foreach (komponente k in this.kraftFutter){
 			k.eingabe.spinbutton.set_value(k.eingabe.spinbutton.get_value() * this.spinbutton1.get_value() / tierZahl);
 			k.tiere = (int)this.spinbutton1.get_value();
 			k.update();

@@ -51,8 +51,6 @@ public static int main (string[] args) {
 	hauptFenster.window1.show_all();
 	rationFenster.window4.show_all();
 	Gtk.main ();
-print(doubleparse(0.1794) + "\n");
-print(doubleparse(12.129455) + "\n");
     return 0;
 }
 
