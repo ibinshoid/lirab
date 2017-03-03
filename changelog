@@ -2,6 +2,7 @@
 - Gesamtmenge wird richtig angezeigt
 - Programm lässt sich zuverlässiger beenden
 - Eingaben für Futtermengen rechtsbündig
+- Info Dialog
 
 0.3.0
 - compiliert jetzt auch mit mingw für Windoofs

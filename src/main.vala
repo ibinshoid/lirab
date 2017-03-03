@@ -2,7 +2,7 @@ using Sqlite;
 using Gtk;
 using lirab;
 
-const string version = "0.3";
+const string version = "0.3.1";
 string datenVerzeichnis;
 string uiVerzeichnis;
 clirabDb lirabDb;

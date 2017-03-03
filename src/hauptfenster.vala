@@ -24,6 +24,7 @@ public class chauptFenster {
 	private Gtk.MenuItem menuitem8;
 	private Gtk.MenuItem menuitem9;
 	private Gtk.MenuItem menuitem10;
+	private Gtk.MenuItem menuitem11;
 	private Gtk.MenuItem imagemenuitem5;
 	
 	public chauptFenster() {	
@@ -49,6 +50,7 @@ public class chauptFenster {
 		menuitem8 = builder.get_object ("menuitem8") as Gtk.MenuItem;
 		menuitem9 = builder.get_object ("menuitem9") as Gtk.MenuItem;
 		menuitem10 = builder.get_object ("menuitem10") as Gtk.MenuItem;
+		menuitem11 = builder.get_object ("menuitem11") as Gtk.MenuItem;
 		imagemenuitem5 = builder.get_object ("imagemenuitem5") as Gtk.MenuItem;
 		//Ereignisse verbinden
 		this.window1.delete_event.connect(beenden);
@@ -59,6 +61,7 @@ public class chauptFenster {
 		this.menuitem8.activate.connect(rationBearbeiten);
 		this.menuitem9.activate.connect(()=>{rationSchliessen(null);});
 		this.menuitem10.activate.connect(rationDrucken);
+		this.menuitem11.activate.connect(infoDialog);
 		this.imagemenuitem5.activate.connect(()=>{this.window1.close();});
 	}
 	
@@ -261,6 +264,23 @@ public class chauptFenster {
 			Gtk.main_quit();
 		}
 		return b;
+	}
+	
+	private void infoDialog(){
+	//Infodialog
+        var dialog = new AboutDialog();
+        string[] dank = {"openclipart.org für das Logo"};
+        
+        dialog.set_version(version);
+        dialog.set_copyright("© 2017 Andreas Strasser");
+        dialog.set_logo_icon_name("lirab");
+        dialog.set_website("https://github.com/ibinshoid/lirab");
+        dialog.set_website_label("https://github.com/ibinshoid/lirab");
+        dialog.authors = {"Andreas Strasser"};
+        dialog.add_credit_section("Vielen Dank an:", (string)dank);
+        dialog.run();
+        dialog.destroy();
+	
 	}
 	
 }
