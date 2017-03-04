@@ -269,7 +269,9 @@ public class chauptFenster {
 	private void infoDialog(){
 	//Infodialog
         var dialog = new AboutDialog();
-        string[] dank = {"openclipart.org für das Logo"};
+        string[] dank =  {"openclipart.org für das Logo"
+						 ,"alle Entwickler von GTK3, Vala, cmake, ..."
+						 };
         
         dialog.set_version(version);
         dialog.set_copyright("© 2017 Andreas Strasser");
