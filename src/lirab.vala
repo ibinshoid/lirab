@@ -281,4 +281,41 @@ namespace lirab{
 			this.tierBedarf.NEL = spinbutton3.get_value();
 		}
 	}
+public string doubleparse(double dble, int nk=2){
+    string wert;
+	string rueckwert;
+    int minus = 0;
+    
+    if(dble <= -1){
+        minus = 1;
+        wert = GLib.Math.round(0 - (dble * (Math.pow(10, nk)))).to_string();
+    }else{
+        wert = GLib.Math.round(dble * (Math.pow(10, nk))).to_string();
+    }
+	if(wert.length <= nk-1){
+		wert = GLib.Math.round(dble * (Math.pow(10, nk + 1))).to_string();
+		wert += string.nfill(nk - wert.length, '0');
+		rueckwert = wert.splice(-nk, -nk, "0,");
+	}else if(wert.length == nk){
+		rueckwert = wert.splice(-nk, -nk, "0,");
+	}else{
+		rueckwert = wert.splice(-nk, -nk, ",");
+	}
+	if(nk == 0){
+		rueckwert= GLib.Math.round(dble).to_string();
+	}
+    if(minus == 1){
+        rueckwert = "-" + rueckwert;
+    }
+	return rueckwert;
+}
+    
+    public void err(string message="", int stufe=1){
+        if(debuging == 1){
+            string[] art = {_("Meldung"),
+                            _("Fehler")};
+            print(art[stufe] +": " + message + "\n");
+        }
+    }
+    
 }

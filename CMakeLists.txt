@@ -64,6 +64,9 @@ list(REMOVE_ITEM required_pkgs "config {nocheck,nolink}")
 # glib-2.0
 pkg_check_modules(GLIB2.0 REQUIRED "glib-2.0")
 
+# generate a source file containing build parameters a so our executable can find installed resources
+set (CONFIG_FILE ${CMAKE_SOURCE_DIR}/src/config.vala)
+configure_file (src/config.vala.cmake ${CONFIG_FILE})
 
 set(default_vala_flags
   "--thread"

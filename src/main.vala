@@ -2,9 +2,12 @@ using Sqlite;
 using Gtk;
 using lirab;
 
-const string version = "0.3.1";
+const string localePfad = config.INSTALL_PATH + "/share/locale";
+const string GETTEXT_PACKAGE = "lask";
+const string version = "0.4.0";
 string datenVerzeichnis;
 string uiVerzeichnis;
+int debuging=0;
 clirabDb lirabDb;
 cmittelFenster mittelFenster;
 cmittelEdit mittelEdit;
@@ -18,27 +21,47 @@ ration aktRation;
 TreeStore treestore;
 	
 public static int main (string[] args) {
-	lirabDb = new clirabDb();
 	datenVerzeichnis = Environment.get_user_config_dir();
-#if Linux
-		if(File.new_for_path(Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui").query_file_type(0) == FileType.DIRECTORY){
-			uiVerzeichnis = Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui";
-		}else if(File.new_for_path("/usr/local/share/lirab/ui").query_file_type(0) == FileType.DIRECTORY){
-			uiVerzeichnis = "/usr/local/share/lirab/ui";
-		}else if(File.new_for_path("/usr/share/lirab").query_file_type(0) == FileType.DIRECTORY){
-			uiVerzeichnis = "/usr/share/lirab/ui";
-		}else{print("FEHLER! Verzeichnis mit den ui-Dateien konnte nicht gefunden werden"); return 1;}
-		Environment.set_current_dir(uiVerzeichnis);
-#elif Windows
-			Environment.set_current_dir(Environment.get_system_data_dirs()[Environment.get_system_data_dirs().length-2] + "\\lirab\\ui");
-#endif
+    #if Linux
+            if(File.new_for_path(Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui").query_file_type(0) == FileType.DIRECTORY){
+                uiVerzeichnis = Path.get_dirname(FileUtils.read_link("/proc/self/exe"))+"/ui";
+            }else if(File.new_for_path(config.INSTALL_PATH +"/share/lirab/ui").query_file_type(0) == FileType.DIRECTORY){
+                uiVerzeichnis = config.INSTALL_PATH + "/share/lirab/ui";
+            }else{
+                err("Verzeichnis mit den ui-Dateien konnte nicht gefunden werden", 1);
+                return 1;
+            }
+            Environment.set_current_dir(uiVerzeichnis);
+    #elif Windows
+                uiVerzeichnis = Environment.get_system_data_dirs()[Environment.get_system_data_dirs().length-2] + "\\lirab\\ui";
+                Environment.set_current_dir(uiVerzeichnis + "\\lirab\\ui");
+    #endif
 
+    foreach (string arg in args){
+        if(arg == "--debug"){debuging=1;}
+        if(arg == "--help"){
+            stdout.printf(_(
+"""Aufruf: lirab [Option]
+Rationsberechnung für Linux
 
+Optionen:
+  --debug     gibt Debugmeldungen aus
+  --version   zeigt die aktuelle Versionsnummer an
+  --help      zeigt diese Hilfeseite an
+"""));
+            return 0;
+        }
+        if(arg == "--version"){
+            print(_("LASK Version = " + version + "\n"));
+            return 0;
+        }
+    }
 	//Wenn Datenbank nicht da ist, dann erzeugen
 	if(File.new_for_path(datenVerzeichnis + "/lirab.sqlite").query_exists()){
 	}else{
 		lirabDb.betriebAnlegen(datenVerzeichnis + "/lirab.sqlite");
 	}
+	lirabDb = new clirabDb();
 	lirabDb.open(datenVerzeichnis + "/lirab.sqlite");
 	aktRation.id = -1;
 	Gtk.init (ref args);
@@ -54,24 +77,6 @@ public static int main (string[] args) {
     return 0;
 }
 
-public string doubleparse(double dble, int nk=2){
-    string wert;
-	string rueckwert;
-	wert = GLib.Math.round(dble * (Math.pow(10, nk))).to_string();
-	if(wert.length <= nk-1){
-		wert = GLib.Math.round(dble * (Math.pow(10, nk + 1))).to_string();
-		wert += string.nfill(nk - wert.length, '0');
-		rueckwert = wert.splice(-nk, -nk, "0,");
-	}else if(wert.length == nk){
-		rueckwert = wert.splice(-nk, -nk, "0,");
-	}else{
-		rueckwert = wert.splice(-nk, -nk, ",");
-	}
-	if(nk == 0){
-		rueckwert= GLib.Math.round(dble).to_string();
-	}
-	return rueckwert;
-}
 
 public double sWert(double[] darr){
 	double summe = 0;

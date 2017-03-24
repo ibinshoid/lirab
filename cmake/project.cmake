@@ -24,6 +24,7 @@ set(srcfiles
   "src/rationtabkuh.vala"
   "src/rationtabfaerse.vala"
   "src/rationtabbulle.vala"
+  "src/config.vala"
 )
 set(vapifiles
 )

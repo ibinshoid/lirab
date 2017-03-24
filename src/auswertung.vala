@@ -220,7 +220,6 @@ public class causwertungFenster : GLib.Object{
 	}
 	
 	private void draw_deckblatt(int breite, Cairo.Context cr){
-        int heigh = int.parse(doubleparse(breite * 1.41, 0));
         var layout1 = Pango.cairo_create_layout (cr);
         int dpi = Pango.SCALE;
  
@@ -246,7 +245,6 @@ public class causwertungFenster : GLib.Object{
 
 	private void draw_futtermittel(int breite, Cairo.Context cr, int page_nr){
 		//Futtermittel drucken
-        int heigh = int.parse(doubleparse(breite * 1.41, 0));
         int dpi = Pango.SCALE;
 		int zeilen = 5;
 		int zeilenhoehe = 30;
@@ -574,7 +572,6 @@ public class causwertungFenster : GLib.Object{
 
 	private void draw_auswertung(int breite, Cairo.Context cr, int page_nr){
 		//Auswertung drucken
-        int heigh = int.parse(doubleparse(breite * 1.41, 0));
         int dpi = Pango.SCALE;
 		int zeilen = 0;
 		int zeilenhoehe = 20;

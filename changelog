@@ -1,3 +1,8 @@
+0.4.0
+- Auffällige Nährstoffe werden in Liste farbig gemalt
+- Programmstart verbessert
+- Optionen --help --version --debug hinzugefügt
+
 0.3.1
 - Gesamtmenge wird richtig angezeigt
 - Programm lässt sich zuverlässiger beenden

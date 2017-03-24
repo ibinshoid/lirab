@@ -279,7 +279,7 @@ public class chauptFenster {
         dialog.set_website("https://github.com/ibinshoid/lirab");
         dialog.set_website_label("https://github.com/ibinshoid/lirab");
         dialog.authors = {"Andreas Strasser"};
-        dialog.add_credit_section("Vielen Dank an:", (string)dank);
+        dialog.add_credit_section("Vielen Dank an:", dank);
         dialog.run();
         dialog.destroy();
 	

@@ -200,7 +200,11 @@ public class crationTab:Frame {
 	protected void updateListe(){
 	//Listenansicht aktualisieren
 		mittel sMittel = rat.get_summe();
+		Gdk.RGBA gelb = Gdk.RGBA();
+		Gdk.RGBA rot = Gdk.RGBA();
 
+		gelb.parse("yellow");
+		rot.parse("red");
 		foreach(Widget w in grid25.get_children()){
 			w.destroy();
 		}
@@ -224,7 +228,12 @@ public class crationTab:Frame {
 		grid25.attach(new Label(doubleparse(sMittel.nXP) + " g   "), 1, 10, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.nXP/sMittel.TM/10) + " %"), 2, 10, 1, 1);
 		grid25.attach(new Label("N-Bilanz (RNB):"), 0, 11, 1, 1);
-		grid25.attach(new Label(doubleparse(sMittel.RNB/sMittel.TM) + " g   "), 1, 11, 1, 1);
+		grid25.attach(new Label(doubleparse(sMittel.RNB) + " g   "), 1, 11, 1, 1);
+		if(sMittel.RNB <= -30){
+			grid25.get_child_at(1, 11).override_background_color(StateFlags.NORMAL, rot);
+		}else if(sMittel.RNB <= -1 || sMittel.RNB >= 11){
+			grid25.get_child_at(1, 11).override_background_color(StateFlags.NORMAL, gelb);
+		}
 		grid25.attach(new Label("Pansenstabiles Eiweiß (UDP):"), 0, 12, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.UDP) + " g   "), 1, 12, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.UDP/sMittel.TM/10) + " %"), 2, 12, 1, 1);
@@ -276,6 +285,31 @@ public class crationTab:Frame {
 		grid25.attach(new Label("Kalium (K):"), 0, 30, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.K) + " g   "), 1, 30, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.K/sMittel.TM/10) + " %"), 2, 30, 1, 1);
+		//Nährstoffverhältnisse
+		grid25.attach(new Label(""), 0, 31, 3, 1);
+		grid25.attach(new Label("Nährstoffe:"), 0, 32, 1, 1);
+		grid25.attach(new Label("Verhältnis:   "), 1, 32, 1, 1);
+		grid25.attach(new Label("K:Na"), 0, 34, 1, 1);
+		grid25.attach(new Label(doubleparse(sMittel.K/sMittel.Na, 1) + ":1   "), 1, 34, 1, 1);
+		if(sMittel.K/sMittel.Na >= 100){
+			grid25.get_child_at(1, 34).override_background_color(StateFlags.NORMAL, rot);
+		}else if(sMittel.K/sMittel.Na <= 10 || sMittel.K/sMittel.Na >= 20){
+			grid25.get_child_at(1, 34).override_background_color(StateFlags.NORMAL, gelb);
+		}
+		grid25.attach(new Label("Ca:P"), 0, 35, 1, 1);
+		grid25.attach(new Label(doubleparse(sMittel.Ca/sMittel.P, 1) + ":1   "), 1, 35, 1, 1);
+		if(sMittel.Ca/sMittel.P >= 5){
+			grid25.get_child_at(1, 35).override_background_color(StateFlags.NORMAL, rot);
+		}else if(sMittel.Ca/sMittel.P <= 1 || sMittel.Ca/sMittel.P >= 3.5){
+			grid25.get_child_at(1, 35).override_background_color(StateFlags.NORMAL, gelb);
+		}
+		grid25.attach(new Label("K:Mg"), 0, 36, 1, 1);
+		grid25.attach(new Label(doubleparse(sMittel.K/sMittel.Mg, 1) + ":1   "), 1, 36, 1, 1);
+		if(sMittel.K/sMittel.Mg >=15){
+			grid25.get_child_at(1, 36).override_background_color(StateFlags.NORMAL, rot);
+		}else if(sMittel.K/sMittel.Mg <= 9 || sMittel.K/sMittel.Mg >= 11){
+			grid25.get_child_at(1, 36).override_background_color(StateFlags.NORMAL, gelb);
+		}
 	}
 	
 	protected void eingabeHinzufuegen1(mittel m){
