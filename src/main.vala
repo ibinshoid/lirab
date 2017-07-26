@@ -4,7 +4,7 @@ using lirab;
 
 const string localePfad = config.INSTALL_PATH + "/share/locale";
 const string GETTEXT_PACKAGE = "lask";
-const string version = "0.4.0";
+const string version = config.LIRAB_VERSION;
 string datenVerzeichnis;
 string uiVerzeichnis;
 int debuging=0;
@@ -34,7 +34,7 @@ public static int main (string[] args) {
             Environment.set_current_dir(uiVerzeichnis);
     #elif Windows
                 uiVerzeichnis = Environment.get_system_data_dirs()[Environment.get_system_data_dirs().length-2] + "\\lirab\\ui";
-                Environment.set_current_dir(uiVerzeichnis + "\\lirab\\ui");
+                Environment.set_current_dir(uiVerzeichnis);
     #endif
 
     foreach (string arg in args){
@@ -57,11 +57,11 @@ Optionen:
         }
     }
 	//Wenn Datenbank nicht da ist, dann erzeugen
+	lirabDb = new clirabDb();
 	if(File.new_for_path(datenVerzeichnis + "/lirab.sqlite").query_exists()){
 	}else{
 		lirabDb.betriebAnlegen(datenVerzeichnis + "/lirab.sqlite");
 	}
-	lirabDb = new clirabDb();
 	lirabDb.open(datenVerzeichnis + "/lirab.sqlite");
 	aktRation.id = -1;
 	Gtk.init (ref args);

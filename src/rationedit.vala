@@ -25,10 +25,33 @@ public class crationEdit {
 	public ration rationErzeugen(){
 	//neue Ration erzeugen
 		MainLoop loop = new MainLoop ();
-	
+		MessageDialog dialog = null;
+		int i = 0;
+		
 		this.fensterBauen();
 		this.window2.show();
-		this.button5.clicked.connect(()=>{loop.quit();});
+		this.button5.clicked.connect(()=>{
+			i = 0;
+			foreach (string r in lirabDb.rationenLesen()){
+				if (r == this.entry1.get_text()) {
+					dialog = new MessageDialog(this.window2,
+												Gtk.DialogFlags.MODAL,
+												Gtk.MessageType.WARNING,
+												Gtk.ButtonsType.OK,
+												"Eine Ration mit diesem Namen gibt es schon!"
+												);
+					dialog.set_title("Hinweis");
+					dialog.set_decorated(true);
+					dialog.run();
+					dialog.destroy();
+					i = 1;
+					break;
+				}
+			}
+			if (i == 0){
+				loop.quit();
+			}
+		});
 		loop.run();
 		this.window2.hide();
 	return rationBauen();

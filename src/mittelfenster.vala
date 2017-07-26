@@ -102,6 +102,13 @@ public class cmittelFenster {
 				aktMittel = m;
 			}
 		}
+		if(wert.get_int() == 0){
+			button2.set_sensitive(false);
+			button3.set_sensitive(false);
+		}else{
+			button2.set_sensitive(true);
+			button3.set_sensitive(true);
+		}
 	}
 
 	public void mittelNeu(){

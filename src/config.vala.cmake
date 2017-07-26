@@ -6,5 +6,6 @@
 
 namespace config {
 	public const string PROJECT_NAME = "@PROJECT_NAME@";
+  	public const string LIRAB_VERSION = "@Lirab_VERSION@";
   	public const string INSTALL_PATH = "@CMAKE_INSTALL_PREFIX@";
 }

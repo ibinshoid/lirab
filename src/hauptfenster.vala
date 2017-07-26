@@ -18,6 +18,7 @@ public class chauptFenster {
 	private VBox vbox5;
 	private VBox vbox6;
 	private VBox vbox11;
+	private Gtk.MenuItem menuitem3;
 	private Gtk.MenuItem menuitem5;
 	private Gtk.MenuItem menuitem6;
 	private Gtk.MenuItem menuitem7;
@@ -44,6 +45,7 @@ public class chauptFenster {
 		vbox5 = builder.get_object ("vbox5") as VBox;
 		vbox6 = builder.get_object ("vbox6") as VBox;
 		vbox11 = builder.get_object ("vbox11") as VBox;
+		menuitem3 = builder.get_object ("menuitem3") as Gtk.MenuItem;
 		menuitem5 = builder.get_object ("menuitem5") as Gtk.MenuItem;
 		menuitem6 = builder.get_object ("menuitem6") as Gtk.MenuItem;
 		menuitem7 = builder.get_object ("menuitem7") as Gtk.MenuItem;
@@ -55,6 +57,7 @@ public class chauptFenster {
 		//Ereignisse verbinden
 		this.window1.delete_event.connect(beenden);
 		mittelFenster.anders.connect(mittelLesen);
+		this.menuitem3.select.connect(updateMenu);
 		this.menuitem5.activate.connect(editFuttermittel);
 		this.menuitem6.activate.connect(rationenVerwalten);
 		this.menuitem7.activate.connect(rationSpeichern);
@@ -68,6 +71,21 @@ public class chauptFenster {
 	
 	public void editFuttermittel(){
 		mittelFenster.window3.show_all();
+	}
+	
+	public void updateMenu(){
+	//wenn kein tab offen ist Menüs deaktivieren
+		if (this.notebook1.get_n_pages() == 0) {
+			this.menuitem7.set_sensitive(false);
+			this.menuitem8.set_sensitive(false);
+			this.menuitem9.set_sensitive(false);
+			this.menuitem10.set_sensitive(false);
+		}else{
+			this.menuitem7.set_sensitive(true);
+			this.menuitem8.set_sensitive(true);
+			this.menuitem9.set_sensitive(true);
+			this.menuitem10.set_sensitive(true);
+		}
 	}
 	
 	public void mittelLesen(){

@@ -81,9 +81,32 @@ public class cmittelEdit {
 	public mittel mittelErzeugen(){
 	//neues Mittel machen
 		MainLoop loop = new MainLoop ();
-	
+		MessageDialog dialog = null;
+		int i = 0;
+		
 		this.window5.show();
-		this.button12.clicked.connect(()=>{loop.quit();});
+		this.button12.clicked.connect(()=>{
+			i = 0;
+			foreach (mittel m in lirabDb.mittelLesen()){
+				if (m.name == this.entry2.get_text() && m.art == this.comboboxtext2.get_active_text()) {
+					dialog = new MessageDialog(this.window5,
+												Gtk.DialogFlags.MODAL,
+												Gtk.MessageType.WARNING,
+												Gtk.ButtonsType.OK,
+												"Ein Futtermittel mit diesem Namen gibt es schon!"
+												);
+					dialog.set_title("Hinweis");
+					dialog.set_decorated(true);
+					dialog.run();
+					dialog.destroy();
+					i = 1;
+					break;
+				}
+			}
+			if (i == 0){
+				loop.quit();
+			}
+		});
 		loop.run();
 		this.window5.hide();
 		return mittelBauen();
@@ -125,7 +148,6 @@ public class cmittelEdit {
 		this.spinbutton27.set_value(aktMittel.Na);
 		this.spinbutton28.set_value(aktMittel.K);
 		this.button12.set_label("Ändern");
-		this.entry2.set_sensitive(false);
 		this.comboboxtext2.set_sensitive(false);
 		this.window5.show();
 		this.button12.clicked.connect(()=>{loop.quit();});
