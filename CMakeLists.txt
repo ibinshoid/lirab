@@ -136,6 +136,16 @@ endforeach()
 add_custom_target("ui_copy_${project_name_lower}" DEPENDS ${uifiles_build})
 add_dependencies("${project_name_lower}" "ui_copy_${project_name_lower}")
 
+# Install other stuff
+install (FILES changelog	        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lirab")
+install (FILES LICENSE		          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lirab")
+install (FILES README.md               DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lirab")
+install (FILES lirab.ico              DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lirab")
+install (FILES lirab.svg             DESTINATION "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps")
+install (FILES lirab.png             DESTINATION "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps")
+install (FILES lirab.desktop         DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications")
+install (FILES lirab.1               DESTINATION "${CMAKE_INSTALL_PREFIX}/share/man/de/man1")
+
 # Uninstall target
 add_custom_target(uninstall
   COMMAND
