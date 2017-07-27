@@ -112,6 +112,27 @@ namespace lirab{
 		}
 		
 	}
+	
+	public struct sollWert{
+	//Min und Max Werte für Auswertung
+		public double negGelb; 
+		public double posGelb; 
+		public double negRot; 
+		public double posRot; 
+		Gdk.RGBA gelb;
+		Gdk.RGBA rot;
+
+		public sollWert(double ng, double pg, double nr, double pr){
+			negGelb = ng;
+			posGelb = pg;
+			negRot = nr; 
+			posRot = pr;
+			gelb = Gdk.RGBA();
+			rot = Gdk.RGBA();
+			gelb.parse("yellow");
+			rot.parse("red");
+		}
+	}
 	 
 	public class eing:Grid{
 	//Futterauswahl und -menge in der linken Spalte

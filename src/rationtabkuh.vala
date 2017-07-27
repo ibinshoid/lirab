@@ -3,7 +3,7 @@ using lirab;
 
 public class crationTabKuh:crationTab {
 //Tab in dem Kuh Ration angezeigt wird
-
+	
 	public crationTabKuh(ration tabRat) {
 	//Konstructor
 		rat = tabRat;
@@ -22,6 +22,11 @@ public class crationTabKuh:crationTab {
 	}
 	public void updateKuhListe(){
 	//Listenansicht aktualisieren
+		sollWert sollRnb = sollWert(-1, 11, -30, 100);
+		sollWert sollKNa = sollWert(10, 20, -1000, 100);
+		sollWert sollCaP = sollWert(1, 3.5, -1000, 5);
+		sollWert sollKMg = sollWert(9, 11, -1000, 15);
+		
 		updateListe();
 		grid25.attach(new Label("Leistung:"), 3, 1, 1, 1);
 		grid25.attach(new Label(doubleparse(ergebnis.fmMittel.XP) + " Liter"), 3, 8, 1, 1);
@@ -32,6 +37,28 @@ public class crationTabKuh:crationTab {
 		foreach(Widget w in grid25.get_children()){
 			w.set_halign(Align.END);
 		}
+		//Auffällige Werte farbig malen
+		if(sMittel.RNB <= sollRnb.negRot){
+			grid25.get_child_at(1, 11).override_background_color(StateFlags.NORMAL, sollRnb.rot);
+		}else if(sMittel.RNB <= sollRnb.negGelb || sMittel.RNB >= sollRnb.posGelb){
+			grid25.get_child_at(1, 11).override_background_color(StateFlags.NORMAL, sollRnb.gelb);
+		}
+		if(sMittel.K/sMittel.Na >= sollKNa.posRot){
+			grid25.get_child_at(1, 34).override_background_color(StateFlags.NORMAL, sollKNa.rot);
+		}else if(sMittel.K/sMittel.Na <= sollKNa.negGelb || sMittel.K/sMittel.Na >= sollKNa.posGelb){
+			grid25.get_child_at(1, 34).override_background_color(StateFlags.NORMAL, sollKNa.gelb);
+		}
+		if(sMittel.Ca/sMittel.P <= sollCaP.negRot){
+			grid25.get_child_at(1, 35).override_background_color(StateFlags.NORMAL, sollCaP.rot);
+		}else if(sMittel.Ca/sMittel.P <= sollCaP.negGelb || sMittel.Ca/sMittel.P >= sollCaP.posGelb){
+			grid25.get_child_at(1, 35).override_background_color(StateFlags.NORMAL, sollCaP.gelb);
+		}
+		if(sMittel.K/sMittel.Mg <= sollKMg.negRot){
+			grid25.get_child_at(1, 36).override_background_color(StateFlags.NORMAL, sollKMg.rot);
+		}else if(sMittel.K/sMittel.Mg <= sollKMg.negGelb || sMittel.K/sMittel.Mg >= sollKMg.posGelb){
+			grid25.get_child_at(1, 36).override_background_color(StateFlags.NORMAL, sollKMg.gelb);
+		}
+		
 		grid25.show_all();
 	}
 
