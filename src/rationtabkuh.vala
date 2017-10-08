@@ -22,10 +22,10 @@ public class crationTabKuh:crationTab {
 	}
 	public void updateKuhListe(){
 	//Listenansicht aktualisieren
-		sollWert sollRnb = sollWert(-1, 11, -30, 100);
-		sollWert sollKNa = sollWert(10, 20, -1000, 100);
-		sollWert sollCaP = sollWert(1, 3.5, -1000, 5);
-		sollWert sollKMg = sollWert(9, 11, -1000, 15);
+		listeLabel Rnb = new listeLabel(sMittel.RNB, " g   ", -1, 11, -30, 100);
+		listeLabel KNa = new listeLabel(sMittel.K/sMittel.Na, " : 1 ", 10, 20, -1000, 100);
+		listeLabel CaP = new listeLabel(sMittel.Ca/sMittel.P, " : 1 ", 1, 3.5, -1000, 5);
+		listeLabel KMg = new listeLabel(sMittel.K/sMittel.Mg, " : 1 ", 9, 11, -1000, 15);
 		
 		updateListe();
 		grid25.attach(new Label("Leistung:"), 3, 1, 1, 1);
@@ -34,31 +34,17 @@ public class crationTabKuh:crationTab {
 		grid25.attach(new Label("Netto Energie Laktation (NEL):"), 0, 13, 1, 1);
 		grid25.attach(new Label(doubleparse(summe.fmMittel.NEL) + " MJ"), 1, 13, 1, 1);
 		grid25.attach(new Label(doubleparse(ergebnis.fmMittel.NEL) + " Liter"), 3, 13, 1, 1);
+		grid25.get_child_at(1, 11).destroy();
+		grid25.attach(Rnb, 1, 11, 1, 1);
+		grid25.get_child_at(1, 34).destroy();
+		grid25.attach(KNa, 1, 34, 1, 1);
+		grid25.get_child_at(1, 35).destroy();
+		grid25.attach(CaP, 1, 35, 1, 1);
+		grid25.get_child_at(1, 36).destroy();
+		grid25.attach(KMg, 1, 36, 1, 1);
 		foreach(Widget w in grid25.get_children()){
 			w.set_halign(Align.END);
 		}
-		//Auffällige Werte farbig malen
-		if(sMittel.RNB <= sollRnb.negRot){
-			grid25.get_child_at(1, 11).override_background_color(StateFlags.NORMAL, sollRnb.rot);
-		}else if(sMittel.RNB <= sollRnb.negGelb || sMittel.RNB >= sollRnb.posGelb){
-			grid25.get_child_at(1, 11).override_background_color(StateFlags.NORMAL, sollRnb.gelb);
-		}
-		if(sMittel.K/sMittel.Na >= sollKNa.posRot){
-			grid25.get_child_at(1, 34).override_background_color(StateFlags.NORMAL, sollKNa.rot);
-		}else if(sMittel.K/sMittel.Na <= sollKNa.negGelb || sMittel.K/sMittel.Na >= sollKNa.posGelb){
-			grid25.get_child_at(1, 34).override_background_color(StateFlags.NORMAL, sollKNa.gelb);
-		}
-		if(sMittel.Ca/sMittel.P <= sollCaP.negRot){
-			grid25.get_child_at(1, 35).override_background_color(StateFlags.NORMAL, sollCaP.rot);
-		}else if(sMittel.Ca/sMittel.P <= sollCaP.negGelb || sMittel.Ca/sMittel.P >= sollCaP.posGelb){
-			grid25.get_child_at(1, 35).override_background_color(StateFlags.NORMAL, sollCaP.gelb);
-		}
-		if(sMittel.K/sMittel.Mg <= sollKMg.negRot){
-			grid25.get_child_at(1, 36).override_background_color(StateFlags.NORMAL, sollKMg.rot);
-		}else if(sMittel.K/sMittel.Mg <= sollKMg.negGelb || sMittel.K/sMittel.Mg >= sollKMg.posGelb){
-			grid25.get_child_at(1, 36).override_background_color(StateFlags.NORMAL, sollKMg.gelb);
-		}
-		
 		grid25.show_all();
 	}
 
@@ -94,7 +80,7 @@ public class crationTabKuh:crationTab {
 		//Liter Milch anzeigen
 		ergebnis.auswertung.label4.set_text(doubleparse(eMittel.XP));
 		ergebnis.auswertung.label5.set_text(doubleparse(eMittel.nXP));
-		ergebnis.auswertung.label6.set_text(doubleparse(sMittel.RNB / sMittel.TM));
+		ergebnis.auswertung.label6.set_text(doubleparse(sMittel.RNB));
 		ergebnis.auswertung.label7.set_text(doubleparse(eMittel.NEL));
 		bedarf[0].auswertung.label7.set_text(doubleparse(bedarf[0].fmMittel.NEL));
 		bedarf[1].auswertung.label7.set_text(doubleparse(bedarf[1].fmMittel.NEL));

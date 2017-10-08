@@ -113,24 +113,21 @@ namespace lirab{
 		
 	}
 	
-	public struct sollWert{
+	public class listeLabel: Label{
 	//Min und Max Werte für Auswertung
-		public double negGelb; 
-		public double posGelb; 
-		public double negRot; 
-		public double posRot; 
 		Gdk.RGBA gelb;
 		Gdk.RGBA rot;
 
-		public sollWert(double ng, double pg, double nr, double pr){
-			negGelb = ng;
-			posGelb = pg;
-			negRot = nr; 
-			posRot = pr;
-			gelb = Gdk.RGBA();
-			rot = Gdk.RGBA();
+		public listeLabel(double v, string s, double ng = 0, double pg = 0, double nr = 0, double pr = 0){
 			gelb.parse("yellow");
 			rot.parse("red");
+			
+			this.set_text(doubleparse(v, 1) + s);
+			if(v <= nr || v >= pr){
+				this.override_background_color(StateFlags.NORMAL, rot);
+			}else if(v <= ng || v >= pg){
+				this.override_background_color(StateFlags.NORMAL, gelb);
+			}
 		}
 	}
 	 
@@ -267,7 +264,7 @@ namespace lirab{
 		public mittel tierBedarf = mittel();
 		private Label label0 = new Label("");
 		private Label label1 = new Label("XP");
-		private Label label2 = new Label("nXP");
+		public Label label2 = new Label("nXP");
 		public Label label3 = new Label("NEL");
 		public SpinButton spinbutton1 = new SpinButton.with_range(0,1000,1);
 		public SpinButton spinbutton2 = new SpinButton.with_range(0,1000,1);
