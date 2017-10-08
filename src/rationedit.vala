@@ -95,17 +95,34 @@ public class crationEdit {
 		if(this.comboboxtext1.get_active_text() == "Milchkühe"){
 			this.b += new bedarf("Bedarf zur Erhaltung", this.b.length);
 			this.grid14.add(this.b[this.b.length - 1]);
+			this.b[this.b.length - 1].spinbutton1.set_value(500);
+			this.b[this.b.length - 1].spinbutton2.set_value(466);
+			this.b[this.b.length - 1].spinbutton3.set_value(39.4);
 			this.grid14.add(new Separator(Orientation.HORIZONTAL));
 			this.b += new bedarf("Bedarf je Liter Milch", this.b.length);
 			this.grid14.add(this.b[this.b.length - 1]);
+			this.b[this.b.length - 1].spinbutton1.set_value(88);
+			this.b[this.b.length - 1].spinbutton2.set_value(85);
+			this.b[this.b.length - 1].spinbutton3.set_value(3.5);
 		}else if(this.comboboxtext1.get_active_text() == "Färsen"){
 			this.b += new bedarf("Bedarf", this.b.length);
 			this.grid14.add(this.b[this.b.length - 1]);
+			this.b[this.b.length - 1].spinbutton1.set_value(560);
+			this.b[this.b.length - 1].spinbutton2.set_value(0);
+			this.b[this.b.length - 1].spinbutton3.set_value(50);
+			this.b[this.b.length - 1].label3.set_text("ME");
+			this.b[this.b.length - 1].label2.set_opacity(0);
+			this.b[this.b.length - 1].spinbutton2.set_opacity(0);
 			this.b[this.b.length - 1].label3.set_text("ME");
 		}else if(this.comboboxtext1.get_active_text() == "Mastbullen"){
 			this.b += new bedarf("Bedarf", this.b.length);
 			this.grid14.add(this.b[this.b.length - 1]);
+			this.b[this.b.length - 1].spinbutton1.set_value(1000);
+			this.b[this.b.length - 1].spinbutton2.set_value(0);
+			this.b[this.b.length - 1].spinbutton3.set_value(100);
 			this.b[this.b.length - 1].label3.set_text("ME");
+			this.b[this.b.length - 1].label2.set_opacity(0);
+			this.b[this.b.length - 1].spinbutton2.set_opacity(0);
 		}
 		grid14.show_all();
 	}
