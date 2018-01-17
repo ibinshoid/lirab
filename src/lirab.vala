@@ -122,7 +122,7 @@ namespace lirab{
 			gelb.parse("yellow");
 			rot.parse("red");
 			
-			this.set_text(doubleparse(v, 1) + s);
+			this.set_text(doubleparse(v, 2) + s);
 			if(v <= nr || v >= pr){
 				this.override_background_color(StateFlags.NORMAL, rot);
 			}else if(v <= ng || v >= pg){

@@ -22,7 +22,7 @@ public class crationTabKuh:crationTab {
 	}
 	public void updateKuhListe(){
 	//Listenansicht aktualisieren
-		listeLabel Rnb = new listeLabel(sMittel.RNB, " g   ", -1, 11, -30, 100);
+		listeLabel Rnb = new listeLabel((sMittel.RNB/sMittel.TM), " g   ", -1, 11, -30, 100);
 		listeLabel KNa = new listeLabel(sMittel.K/sMittel.Na, " : 1 ", 10, 20, -1000, 100);
 		listeLabel CaP = new listeLabel(sMittel.Ca/sMittel.P, " : 1 ", 1, 3.5, -1000, 5);
 		listeLabel KMg = new listeLabel(sMittel.K/sMittel.Mg, " : 1 ", 9, 11, -1000, 15);
@@ -80,7 +80,7 @@ public class crationTabKuh:crationTab {
 		//Liter Milch anzeigen
 		ergebnis.auswertung.label4.set_text(doubleparse(eMittel.XP));
 		ergebnis.auswertung.label5.set_text(doubleparse(eMittel.nXP));
-		ergebnis.auswertung.label6.set_text(doubleparse(sMittel.RNB));
+		ergebnis.auswertung.label6.set_text(doubleparse(sMittel.RNB/sMittel.TM));
 		ergebnis.auswertung.label7.set_text(doubleparse(eMittel.NEL));
 		bedarf[0].auswertung.label7.set_text(doubleparse(bedarf[0].fmMittel.NEL));
 		bedarf[1].auswertung.label7.set_text(doubleparse(bedarf[1].fmMittel.NEL));

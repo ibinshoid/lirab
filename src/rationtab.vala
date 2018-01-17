@@ -185,7 +185,7 @@ public class crationTab:Frame {
 		summe.auswertung.label3.set_text(doubleparse(sMittel.RF));
 		summe.auswertung.label4.set_text(doubleparse(sMittel.XP));
 		summe.auswertung.label5.set_text(doubleparse(sMittel.nXP));
-		summe.auswertung.label6.set_text(doubleparse(sMittel.RNB));
+//		summe.auswertung.label6.set_text(doubleparse(sMittel.RNB));
 		summe.auswertung.label7.set_text(doubleparse(sMittel.NEL));
 		//Gehalt ausrechnen und anzeigen
 		gehalt.auswertung.label2.set_text(doubleparse(sMittel.TM/sMittel.TM));
@@ -225,7 +225,7 @@ public class crationTab:Frame {
 		grid25.attach(new Label(doubleparse(sMittel.nXP) + " g   "), 1, 10, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.nXP/sMittel.TM/10) + " %"), 2, 10, 1, 1);
 		grid25.attach(new Label("N-Bilanz (RNB):"), 0, 11, 1, 1);
-		grid25.attach(new Label(doubleparse(sMittel.RNB) + " g   "), 1, 11, 1, 1);
+		grid25.attach(new Label(doubleparse(sMittel.RNB/sMittel.TM) + " g   "), 1, 11, 1, 1);
 		grid25.attach(new Label("Pansenstabiles Eiweiß (UDP):"), 0, 12, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.UDP) + " g   "), 1, 12, 1, 1);
 		grid25.attach(new Label(doubleparse(sMittel.UDP/sMittel.TM/10) + " %"), 2, 12, 1, 1);

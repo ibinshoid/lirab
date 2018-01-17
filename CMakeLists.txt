@@ -66,6 +66,7 @@ pkg_check_modules(GLIB2.0 REQUIRED "glib-2.0")
 
 # generate a source file containing build parameters a so our executable can find installed resources
 set (CONFIG_FILE ${CMAKE_SOURCE_DIR}/src/config.vala)
+#file(READ ${CMAKE_SOURCE_DIR}/ui/lirab.ui CMAKE_UI_FILE)
 configure_file (src/config.vala.cmake ${CONFIG_FILE})
 
 set(default_vala_flags
