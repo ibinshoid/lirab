@@ -25,6 +25,7 @@ public class crationTab:Frame {
 	protected Box box1;
 	protected VBox vbox1;
 	protected Label label23;
+	protected CheckButton checkbutton5;
 	protected komponente[] grundFutter = {};
 	protected komponente[] kraftFutter = {};
 	protected komponente[] bedarf = {};
@@ -49,6 +50,7 @@ public class crationTab:Frame {
 		scrolledwindow4 = builder.get_object ("scrolledwindow4") as ScrolledWindow;
 		paned1 = builder.get_object ("paned1") as Paned;
 		label23 = builder.get_object ("label23") as Label;
+		checkbutton5 = builder.get_object ("checkbutton5") as CheckButton;
 		spinbutton1 = builder.get_object ("spinbutton1") as SpinButton;
 		grid11 =  builder.get_object ("grid11") as Gtk.Grid;
 		grid15 =  builder.get_object ("grid15") as Gtk.Grid;
@@ -76,6 +78,7 @@ public class crationTab:Frame {
 												combobox2.set_model(treestore);
 												combobox2.set_active(0);});
 		spinbutton1.value_changed.connect(mengeAendern);
+		checkbutton5.toggled.connect(mengeAendern);
 	}
 	
 	private void tabBauen(){
@@ -417,16 +420,18 @@ public class crationTab:Frame {
 	//Futtermenge an Kuhzahl anpassen
 		int tierZahl;
 		
-		tierZahl = rat.tiere;
-		foreach (komponente k in this.grundFutter){
-			k.eingabe.spinbutton.set_value(k.eingabe.spinbutton.get_value() * this.spinbutton1.get_value() / tierZahl);
-			k.tiere = (int)this.spinbutton1.get_value();
-			k.update();
-		}
-		foreach (komponente k in this.kraftFutter){
-			k.eingabe.spinbutton.set_value(k.eingabe.spinbutton.get_value() * this.spinbutton1.get_value() / tierZahl);
-			k.tiere = (int)this.spinbutton1.get_value();
-			k.update();
+		if (this.checkbutton5.get_active()){	
+			tierZahl = rat.tiere;
+			foreach (komponente k in this.grundFutter){
+				k.eingabe.spinbutton.set_value(k.eingabe.spinbutton.get_value() * this.spinbutton1.get_value() / tierZahl);
+				k.tiere = (int)this.spinbutton1.get_value();
+				k.update();
+			}
+			foreach (komponente k in this.kraftFutter){
+				k.eingabe.spinbutton.set_value(k.eingabe.spinbutton.get_value() * this.spinbutton1.get_value() / tierZahl);
+				k.tiere = (int)this.spinbutton1.get_value();
+				k.update();
+			}
 		}
 		rat.tiere = (int)this.spinbutton1.get_value();
 	}
