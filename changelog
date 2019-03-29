@@ -1,6 +1,7 @@
-0.4.1
+0.5.0
 - Ration anlegen hat Vorgabewerte
 - RNB in Tabelle wird richtig angezeigt
+- Tierzahl kann von Menge entknüpft werden
 
 0.4.0
 - Auffällige Nährstoffe werden in Liste farbig gemalt
