@@ -440,7 +440,6 @@
                   <object class="GtkLabel" id="label3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Name:</property>
                     <property name="xalign">1</property>
                   </object>
@@ -466,6 +465,7 @@
                   <object class="GtkEntry" id="entry2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
